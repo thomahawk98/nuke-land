@@ -27,6 +27,15 @@ const mathPatch = {
             y: -distance * Math.cos(direction * Math.PI / 180)
         };
     },
+    rotate: function (cx, cy, x, y, angle) {
+        const rads = angle * Math.PI / 180;
+        const cors = {
+            x: (Math.cos(rads) * (x - cx)) + (Math.sin(rads) * (y - cy)) + cx,
+            y: (Math.cos(rads) * (y - cy)) - (Math.sin(rads) * (x - cx)) + cy
+        }
+        
+        return cors
+    },
     modulo: function (a, n) {
         return ((a % n) + n) % n;
     },

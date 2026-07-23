@@ -1,11 +1,10 @@
 class Game {
     constructor() {
+        this.t = 0;
         this.world = new World();
         this.debug = true;
         this.objects = {
-            objects: [
-                new Player(user, 0, 0),
-            ],
+            objects: [],
             update: function () {
                 for (var o of this.objects) {
                     // skip objects with no update function
@@ -13,7 +12,7 @@ class Game {
                         console.error(`${o} does not have a update function`);
                         continue;
                     }
-                    
+
                     // update object
                     o.update();
                 }
@@ -42,14 +41,26 @@ class Game {
     }
 
     tick() {
+        this.t++;
         this.update();
         this.draw();
     };
 
     update() {
+        if (!this.initialized) {
+            this.reset();
+            this.initialized = true;
+        }
         this.world.update();
         this.objects.update();
     };
+
+    reset() {
+        this.objects.objects = [
+            new Player(user, 0, 0),
+            new Zombie(10, 0)
+        ]
+    }
 
     draw() {
         ctx.save();
