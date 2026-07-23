@@ -56,10 +56,14 @@ class Game {
     };
 
     reset() {
-        this.objects.objects = [
-            new Player(user, 0, 0),
-            new Zombie(10, 0)
-        ]
+        this.objects.objects = [];
+        this.objects.objects.push(new Player(user, 0, 0));
+        const amount = 10;
+        for (let n = 0; n < amount; n++) {
+            const angle = 360 / amount * n;
+            const { x, y } = Math.distToMove(10, angle);
+            this.objects.objects.push(new Zombie(x, y));
+        }
     }
 
     draw() {
