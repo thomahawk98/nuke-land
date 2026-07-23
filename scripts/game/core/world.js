@@ -7,6 +7,7 @@ class World {
 
     update() {
         this.chunkManager.update();
+        this.pathfindingGrid.update();
     }
 
     getSolidityAt(x, y) {

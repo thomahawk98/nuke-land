@@ -6,9 +6,9 @@ class PathfindingGrid {
         this.pathStartNodes = new Set();
         this.pathEndNodes = new Set();
 
-        this.enabled = true;
+        this.enabled = false;
         this.opacity = 0;
-        this.maxOpacity = 75;
+        this.maxOpacity = 50;
     }
 
     update() {
@@ -119,6 +119,9 @@ class PathfindingGrid {
     }
 
     draw() {
+        const alpha = this.opacity / 100;
+        ctx.globalAlpha = alpha;
+
         //draw solid color of each node
         for (const [key, node] of this.nodes) {
             const visible = user.cam.checkVisibilityOfRect(node.x, node.y);
@@ -130,6 +133,7 @@ class PathfindingGrid {
         for (const [key, node] of this.nodes) {
             this.drawNodeOutline(node);
         }
+        ctx.globalAlpha = 1;
     }
 
     getBounds(node, gap = -0.01, size = 1) {
@@ -139,7 +143,7 @@ class PathfindingGrid {
 
     drawNode(node) {
         const isPath = this.pathNodes.has(node);
-        const bounds = this.getBounds(node, 0.5);
+        const bounds = this.getBounds(node, 0.25);
         ctx.fillStyle = !node.traversable ? 'rgb(200,50,50)' : isPath ? 'lime' : 'white';
         ctx.fillRect(...bounds);
     }
