@@ -1,18 +1,18 @@
 class Camera {
-    constructor(user) {
+    constructor(canvas, user) {
         this.user = user;
 
         this.x = 0;
         this.y = 0;
 
-        this.speed = 5;
+        this.speed = 0.1;
         this.zoom = 1;
         this.snap = 0.05;
 
         this.target = {
             x: 0,
             y: 0,
-            zoom: 1
+            zoom: 25
         }
     }
 

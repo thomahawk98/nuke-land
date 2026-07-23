@@ -2,7 +2,7 @@ class User {
     constructor(canvas) {
         this.mouse = new MouseTracker(canvas);
         this.keys = new KeyTracker();
-        this.cam = new Camera(this);
+        this.cam = new Camera(canvas, this);
     }
 
     tick() {

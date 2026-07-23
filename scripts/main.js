@@ -2,10 +2,11 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const user = new User(canvas);
+const game = new Game();
 const loader = new Loader();
 
 // set up the project
-const title = "Game Template";
+const title = "Nuke Land";
 const dimensions = {
     width: 1000,
     height: 1000
