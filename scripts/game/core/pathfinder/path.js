@@ -6,6 +6,7 @@ class Path {
 
         this.steps = [];
         this.grid.paths.push(this);
+        console.log(this.grid.paths);
     }
 
     calculate(maxDepth = 500) {

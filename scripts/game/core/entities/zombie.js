@@ -15,13 +15,15 @@ class Zombie extends Entity {
 
     targetPlayer() {
         const player = game.getPlayer();
-        if(!player) return;
+        if (!player) return;
 
         const pathSteps = this.pathFinder.getPathTo(player.x, player.y);
         const target = pathSteps[1];
-        if(!target) return;
+        if (!target) return;
 
-        this.accelTarget = target;
+        const dir = Math.dirTo(this.x, this.y, target.x, target.y);
+        const move = Math.distToMove(1, dir);
+        this.accelTarget = move;
     }
 
     draw() {
