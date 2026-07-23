@@ -3,12 +3,31 @@ class Path {
         this.grid = grid;
         this.start = start;
         this.end = end;
-
         this.steps = [];
+        this.searchData = new Map();
+
         this.grid.paths.push(this);
     }
 
-    calculate(maxDepth = 500) {
+    getData(node) {
+        let data = this.searchData.get(node);
+
+        if (!data) {
+            data = {
+                totalCost: Infinity,
+                distanceToStartCost: Infinity,
+                distanceToEndCost: Infinity,
+                parent: null
+            };
+
+            this.searchData.set(node, data);
+        }
+
+        return data;
+    }
+
+    calculate(maxDepth = 50) {
+        this.searchData.clear();
         const closestNodeToEnd = this.searchForPath(maxDepth);
         this.steps = this.decompileStepsFromNodeParents(closestNodeToEnd);
     }
@@ -20,10 +39,15 @@ class Path {
 
         if (!this.startNode || !this.endNode) return console.error('here');
 
-        //set costs of start node
-        this.startNode.distanceToEndCost = this.getAbsoluteDistanceCost(this.startNode, this.endNode);
-        this.startNode.distanceToStartCost = 0;
-        this.startNode.totalCost = this.startNode.distanceToEndCost + this.startNode.distanceToStartCost;
+        // set costs of start node
+        const distanceFromStartToEnd = this.getAbsoluteDistanceCost(this.startNode, this.endNode);
+        const data = {
+            distanceToStartCost: 0,
+            distanceToEndCost: distanceFromStartToEnd,
+            totalCost: distanceFromStartToEnd,
+            parent: null
+        }
+        this.searchData.set(this.startNode, data);
 
         const uncheckedNodes = new Set([this.startNode]); // nodes that haven't been checked yet and need to be checked
         const checkedNodes = new Set(); // nodes that have been check (and aren't the target node)
@@ -42,9 +66,14 @@ class Path {
         //console.log(`no path found between (${this.start.x},${this.start.y}) and (${this.end.x},${this.end.y})`);
 
         //find closest node on path
-        let closest = false;
+        let closest = null;
+        let closestDistance = Infinity;
         for (const node of checkedNodes) {
-            if (!closest || node.distanceToEndCost < closest.distanceToEndCost) closest = node;
+            const data = this.getData(node);
+            if (data.distanceToEndCost > closestDistance) continue;
+
+            closest = node;
+            closestDistance = data.distanceToEndCost;
         }
         return closest;
     }
@@ -65,48 +94,61 @@ class Path {
         if (checkedNodes.has(o) || !o.traversable) return;
 
         //compute costs relative to current node
-        const costs = this.getCostFromParent(o, current);
+        const costs = this.getCostsFromParent(o, current);
 
         if (uncheckedNodes.has(o)) {
-            if (costs.totalCost > o.totalCost) return; //total cost from current is higher than origional total cost, leave node unchanged
+            const currentTotalCost = this.getData(o).totalCost;
+            if (costs.totalCost > currentTotalCost) return; // total cost from current is higher than origional total cost, leave node unchanged
         } else {
             uncheckedNodes.add(o); //add neighbor to unchecked nodes
         }
 
-        //update costs based on current
-        o.totalCost = costs.totalCost;
-        o.distanceToStartCost = costs.distanceToStartCost;
-        o.distanceToEndCost = costs.distanceToEndCost;
-
-        //set parent of neighbor to current (to track backward through the path)
-        o.parent = current;
+        // set the data of the neighbor node to point back to the current node as it's parent
+        const data = {
+            totalCost: costs.totalCost,
+            distanceToStartCost: costs.distanceToStartCost,
+            distanceToEndCost: costs.distanceToEndCost,
+            parent: current
+        }
+        this.searchData.set(o, data);
     }
 
-    getLowestCostNode(nodes) { // nodes is a set()
-        let best = false;
+    getLowestCostNode(nodes) {
+        let bestNode = null;
+        let bestData = {
+            totalCost: Infinity,
+        };
         for (const node of nodes) {
+            const data = this.getData(node);
 
-            //check if current node is lower cost
+            if (!bestNode) {
+                bestNode = node;
+                bestData = data;
+                continue;
+            }
+
+
             if (
-                !best ||
-                node.totalCost < best.totalCost ||
-                (node.totalCost === best.totalCost && node.distanceToEndCost < best.distanceToEndCost)
+                data.totalCost < bestData.totalCost ||
+                (data.totalCost === bestData.totalCost && data.distanceToEndCost < bestData.distanceToEndCost)
             ) {
-                best = node;
+                bestNode = node;
+                bestData = data;
             }
         }
 
-        return best;
+        return bestNode;
     }
 
-    getCostFromParent(node, parent) {
+    getCostsFromParent(node, parent) {
         // check if parent has a valid distanceToStartCost
-        if (!Number.isFinite(parent.distanceToStartCost)) {
-            return console.log('parent node has no defined distance to starting point:', parent);
+        const parentData = this.getData(parent);
+        if (!Number.isFinite(parentData.distanceToStartCost)) {
+            return console.error('parent node has no defined distance to starting point:', parent);
         }
 
         //get costs
-        const distanceToStartCost = parent.distanceToStartCost + this.getAbsoluteDistanceCost(node, parent);
+        const distanceToStartCost = parentData.distanceToStartCost + this.getAbsoluteDistanceCost(node, parent);
         const distanceToEndCost = this.getAbsoluteDistanceCost(node, this.endNode);
         const totalCost = distanceToStartCost + distanceToEndCost;
 
@@ -114,6 +156,7 @@ class Path {
     }
 
     getAbsoluteDistanceCost(node1, node2) {
+        // return Math.distTo(node1.x, node1.y, node2.x, node2.y) * 10;
         const widthDist = Math.abs(node1.x - node2.x);
         const heightDist = Math.abs(node1.y - node2.y);
 
@@ -134,11 +177,9 @@ class Path {
         let current = node;
         while (current) {
             steps.push(current);
-            
-            //go to next node
-            let next = current.parent;
-            delete current.parent; //delete the parent property
-            current = next;
+
+            // go to next node
+            current = this.getData(current).parent;
         }
 
         //reverse the array

@@ -69,7 +69,7 @@ class Chunk {
             case 'dead grass':
                 return 'rgb(46, 82, 25)'
             case 'dirt':
-                return 'rgb(94, 53, 20)'
+                return 'rgb(94, 74, 20)'
             case 'gravel':
                 return 'rgb(129, 109, 96)'
             case 'stone':

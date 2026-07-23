@@ -6,14 +6,15 @@ class PathfindingGrid {
         this.pathStartNodes = new Set();
         this.pathEndNodes = new Set();
 
-        this.enabled = false;
+        // visual stuff
+        this.enabled = true;
         this.opacity = 0;
         this.maxOpacity = 50;
     }
 
     update() {
         // update opacity
-        if(this.enabled) this.opacity = Math.min(this.opacity + 5, this.maxOpacity);
+        if (this.enabled) this.opacity = Math.min(this.opacity + 5, this.maxOpacity);
         else this.opacity = Math.max(this.opacity - 5, 0);
 
         // update node decay
@@ -27,15 +28,15 @@ class PathfindingGrid {
         this.pathNodes = new Set();
         this.pathStartNodes = new Set();
         this.pathEndNodes = new Set();
-        for(const path of this.paths) {
-            for(const node of path.steps) {
+        for (const path of this.paths) {
+            for (const node of path.steps) {
                 this.pathNodes.add(node);
 
                 const startX = Math.floor(path.start.x), startY = Math.floor(path.start.y);
-                if(node.x == startX && node.y == startY) this.pathStartNodes.add(node);
+                if (node.x == startX && node.y == startY) this.pathStartNodes.add(node);
 
                 const endX = Math.floor(path.end.x), endY = Math.floor(path.end.y);
-                if(node.x == endX && node.y == endY) this.pathEndNodes.add(node);
+                if (node.x == endX && node.y == endY) this.pathEndNodes.add(node);
             }
         }
     }
@@ -115,6 +116,11 @@ class PathfindingGrid {
                 nodes.push(...cardinalNeighbors);
             }
         }
+        if(user.keys.up[' ']) console.log(
+            node.x,
+            node.y,
+            nodes.map(n => `${n.x},${n.y}`)
+        );
         return nodes;
     }
 
