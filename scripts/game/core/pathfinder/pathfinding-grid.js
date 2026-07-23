@@ -79,7 +79,7 @@ class PathfindingGrid {
         const x = Math.floor(_x), y = Math.floor(_y);
         const key = this.encodeKey(x, y);
 
-        node.decay = 60; //60s before deletion
+        node.decay = 60; // 60s before deletion
 
         this.nodes.set(key, node);
     }

@@ -3,7 +3,7 @@ class Zombie extends Entity {
         super(x, y);
         this.type = 'zombie';
         this.accel = 0.005;
-        
+
         this.pathFinder = new PathFinder(this, game.world.pathfindingGrid);
     }
 
@@ -18,7 +18,7 @@ class Zombie extends Entity {
         if (!player) return;
 
         const pathSteps = this.pathFinder.getPathTo(player.x, player.y);
-        const target = pathSteps[1];
+        const target = pathSteps[2];
         if (!target) return;
 
         const dir = Math.dirTo(this.x, this.y, target.x, target.y);
