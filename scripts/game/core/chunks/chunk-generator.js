@@ -14,7 +14,12 @@ class ChunkGenerator {
                 const worldCors = chunk.localToWorldCors(x, y);
 
                 // generate the block type using perlin noise (simple height map for now)
-                const height = noise(worldCors.x, worldCors.y, this.seed); // 0 - 1
+                const scale = 0.01;
+                const height = (
+                    noise(worldCors.x * scale, worldCors.y * scale, this.seed) +
+                    noise(124098 + worldCors.x * scale * 2, 5398 + worldCors.y * scale * 2, this.seed) * 0.5 +
+                    noise(124098 + worldCors.x * scale * 4, 5398 + worldCors.y * scale * 4, this.seed) * 0.25
+                ) / 1.75;
                 const type = this.getBlockTypeFromHeightValue(height);
                 const block = { x, y, type };
 
@@ -32,18 +37,18 @@ class ChunkGenerator {
             'deep water',
             'deep water',
             'water',
-            'water',
-            'water',
             'sand',
+            'dry grass',
             'grass',
             'grass',
-            'grass',
+            'dead grass',
             'dirt',
+            'gravel',
             'stone',
-            'stone',
+            'snow',
             'snow'
         ]
-        const index = Math.floor(height * blockTypes.length);
+        const index = Math.round(height * blockTypes.length);
         return blockTypes[index];
     }
 }

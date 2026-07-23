@@ -6,19 +6,27 @@ class Camera {
         this.y = 0;
 
         this.speed = 0.1;
-        this.zoom = 1;
+        this.zoom = 25;
         this.snap = 0.05;
+        this.locked = true;
 
         this.target = {
             x: 0,
             y: 0,
-            zoom: 25
+            zoom: 20
         }
     }
 
     update() {
-        this.respondToControls();
+        if (this.locked) this.followLockedObject();
+        else this.respondToControls();
         this.moveToTarget();
+    }
+
+    followLockedObject() {
+        this.lockedObject = game.getPlayer();
+        this.target.x = this.lockedObject.x;
+        this.target.y = this.lockedObject.y;
     }
 
     respondToControls() {

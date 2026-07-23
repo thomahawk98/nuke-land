@@ -1,6 +1,7 @@
 class Game {
     constructor() {
         this.world = new World();
+        this.debug = true;
         this.objects = {
             objects: [
                 new Player(user, 0, 0),
@@ -46,6 +47,7 @@ class Game {
     };
 
     update() {
+        this.world.update();
         this.objects.update();
     };
 
@@ -59,12 +61,13 @@ class Game {
         ctx.textBaseline = 'middle';
         ctx.fillText('Hello, World!', 0, 0);
 
+        this.world.draw();
         this.objects.draw();
 
         ctx.restore();
     };
     getPlayer() {
-        return this.objects.find(a => a.type == 'player');
+        return this.objects.objects.find(a => a.type == 'player');
     };
 
 }

@@ -10,8 +10,8 @@ class Player {
         this.accel = 0.01;
         this.accelTarget = { x: 0, y: 0 };
 
-        this.GENERATION_DISTANCE = 10;
-        this.RENDER_DISTANCE = 8;
+        this.GENERATION_DISTANCE = 5;
+        this.RENDER_DISTANCE = 4;
     }
 
     update() {
