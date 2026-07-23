@@ -110,7 +110,7 @@ class PathfindingGrid {
             //looks like the node is in open space ¯\_(ツ)_/¯ (diagonal nodes can be added safely)
             if (allNeighborsAreTraversable) {
                 const diagonalNeighbors = this.getNeighborsOfNode(node, 'diagonal');
-                nodes.push(...cardinalNeighbors, ...diagonalNeighbors);
+                nodes.push(...diagonalNeighbors);
             } else {
                 nodes.push(...cardinalNeighbors);
             }

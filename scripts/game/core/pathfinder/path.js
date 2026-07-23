@@ -62,7 +62,7 @@ class Path {
     }
 
     checkNeighborNode(o, current, uncheckedNodes, checkedNodes) {
-        if (checkedNodes.has(o) || !o.walkable) return;
+        if (checkedNodes.has(o) || !o.traversable) return;
 
         //compute costs relative to current node
         const costs = this.getCostFromParent(o, current);
