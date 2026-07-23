@@ -32,7 +32,6 @@ class Path {
         this.steps = this.decompileStepsFromNodeParents(closestNodeToEnd);
     }
 
-    //totalCost = distanceToStartCost + distanceToEndCost
     searchForPath(maxDepth) {
         this.startNode = this.grid.getNodeAt(this.start.x, this.start.y, true);
         this.endNode = this.grid.getNodeAt(this.end.x, this.end.y, true);

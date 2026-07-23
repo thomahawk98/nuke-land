@@ -3,29 +3,47 @@ class Zombie extends Entity {
         super(x, y);
         this.type = 'zombie';
         this.accel = 0.005;
+
         this.detectionRange = 20;
         this.targetPosition = { x, y };
+
+        this.randomWaitTime = 500;
+        this.urgency = 0.99;
 
         this.pathFinder = new PathFinder(this, game.world.pathfindingGrid);
     }
 
     update() {
         this.updateTargetToPlayer();
-        this.updatePathToTarget();
-        this.followPath();
+        if (this.randomWaitTime > 0) {
+            this.randomWaitTime--;
+            if(this.randomWaitTime <= 0) this.pickRandomTarget();
+        } else {
+            this.updatePathToTarget();
+            this.followPath();
+        }
         this.updateAcceleration();
         this.updateMotion();
     }
 
     updateTargetToPlayer() {
         const player = game.getPlayer();
-        if (!player) return;
-        
+        if (!player) return false;
+
         const dist = Math.distTo(this.x, this.y, player.x, player.y);
-        if (dist > this.detectionRange) return;
+        if (dist > this.detectionRange) return false;
 
         this.targetPosition.x = player.x;
         this.targetPosition.y = player.y;
+        this.randomWaitTime = 0;
+        this.urgency = 0.99;
+        return true;
+    }
+
+    pickRandomTarget() {
+        this.targetPosition.x = this.x + Math.random() * 20 - 10;
+        this.targetPosition.y = this.y + Math.random() * 20 - 10;
+        this.urgency *= 0.95;
     }
 
     updatePathToTarget() {
@@ -33,8 +51,13 @@ class Zombie extends Entity {
     }
 
     followPath() {
-        const target = this.pathFinder.path.steps[2];
-        if (!target) return;
+        let target = this.pathFinder.path.steps[2];
+        if (!target) target = this.pathFinder.path.steps[1];
+        if (!target) {
+            const maxSeconds = (1 - this.urgency) * 1000;
+            this.randomWaitTime = Math.round(Math.random() * maxSeconds);
+            return;
+        }
 
         const dir = Math.dirTo(this.x, this.y, target.x + 0.5, target.y + 0.5);
         const move = Math.distToMove(1, dir);
@@ -44,5 +67,10 @@ class Zombie extends Entity {
     draw() {
         ctx.fillStyle = 'rgb(0,200,0)';
         ctx.fillRect(-0.5, -0.5, 1, 1);
+        
+        ctx.fillStyle = 'rgb(0,0,0)';
+        ctx.font = '0.5px super-crawler';
+        ctx.fillText(this.randomWaitTime, 0, 0);
+        ctx.fillText(this.urgency, 0, 1);
     }
 }
