@@ -6,7 +6,13 @@ class Player extends Entity {
 
         this.inventory = new Inventory(this);
         this.inventory.open = true;
-        user.interface.openInventories.push(this.inventory);
+
+        // add random items to player inventory (remove later)
+        for(let n = 0; n < this.inventory.width * this.inventory.height; n++) {
+            if(Math.random() < 0.5) this.inventory.items[n] = true;
+        }
+
+        user.interface.inventoryManager.openInventories.push(this.inventory);
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
