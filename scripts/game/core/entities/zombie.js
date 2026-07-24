@@ -7,7 +7,7 @@ class Zombie extends Entity {
         this.detectionRange = 20;
         this.targetPosition = { x, y };
 
-        this.randomWaitTime = 500;
+        this.randomWaitTime = Math.round(Math.random() * 500);
         this.urgency = 0.99;
 
         this.pathFinder = new PathFinder(this, game.world.pathfindingGrid);
@@ -67,10 +67,5 @@ class Zombie extends Entity {
     draw() {
         ctx.fillStyle = 'rgb(0,200,0)';
         ctx.fillRect(-0.5, -0.5, 1, 1);
-        
-        ctx.fillStyle = 'rgb(0,0,0)';
-        ctx.font = '0.5px super-crawler';
-        ctx.fillText(this.randomWaitTime, 0, 0);
-        ctx.fillText(this.urgency, 0, 1);
     }
 }

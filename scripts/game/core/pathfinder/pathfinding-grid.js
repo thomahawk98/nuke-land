@@ -116,11 +116,6 @@ class PathfindingGrid {
                 nodes.push(...cardinalNeighbors);
             }
         }
-        if(user.keys.up[' ']) console.log(
-            node.x,
-            node.y,
-            nodes.map(n => `${n.x},${n.y}`)
-        );
         return nodes;
     }
 

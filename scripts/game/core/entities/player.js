@@ -8,6 +8,14 @@ class Player extends Entity {
         this.RENDER_DISTANCE = 4;
     }
 
+    isObjectInRenderDistance(o) {
+        const { x: ox, y: oy } = game.world.chunkManager.getChunkCors(o.x, o.y);
+        const { x: px, y: py } = game.world.chunkManager.getChunkCors(this.x, this.y);
+        const dx = ox - px;
+        const dy = oy - py;
+        return dx * dx + dy * dy < this.RENDER_DISTANCE * this.RENDER_DISTANCE;
+    }
+
     update() {
         this.respondToControls();
         this.updateAcceleration();
@@ -25,5 +33,4 @@ class Player extends Entity {
         ctx.fillStyle = 'red';
         ctx.fillRect(-0.5, -0.5, 1, 1);
     }
-
 }
