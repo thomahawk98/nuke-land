@@ -4,6 +4,10 @@ class Player extends Entity {
         this.user = user;
         this.type = 'player';
 
+        this.inventory = new Inventory(this);
+        this.inventory.open = true;
+        user.interface.openInventories.push(this.inventory);
+
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
     }
