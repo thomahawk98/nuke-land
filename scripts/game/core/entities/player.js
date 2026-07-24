@@ -5,11 +5,16 @@ class Player extends Entity {
         this.type = 'player';
 
         this.inventory = new Inventory(this);
-        this.inventory.open = true;
 
         // add random items to player inventory (remove later)
-        for(let n = 0; n < this.inventory.width * this.inventory.height; n++) {
-            if(Math.random() < 0.5) this.inventory.items[n] = true;
+        for (let n = 0; n < this.inventory.width * this.inventory.height; n++) {
+            if (Math.random() < 0.5) {
+                const item = new Item(true, {
+                    type: 'test item',
+                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
+                });
+                this.inventory.items[n] = item;
+            }
         }
 
         user.interface.inventoryManager.openInventories.push(this.inventory);

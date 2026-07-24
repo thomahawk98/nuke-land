@@ -1,8 +1,6 @@
 class Inventory {
     constructor(container, width = 3, height = 3) {
         this.container = container;
-        this.x = canvas.width * 0.5;
-        this.y = canvas.height * 0.5;
 
         this.width = width;
         this.height = height;
@@ -14,15 +12,32 @@ class Inventory {
         const gap = this.spacing - this.size;
         this.totalWidth = this.spacing * this.width - gap;
         this.totalHeight = this.spacing * this.height - gap;
+
+        this.open = false;
+        this.animation = 0;
+        this.openCors = {
+            x: canvas.width * 0.5,
+            y: canvas.height * 0.5,
+        };
+        this.closedCors = {
+            x: canvas.width * 0.5,
+            y: canvas.height * 1 + this.totalHeight * 0.5,
+        };
+        this.x = this.openCors.x;
+        this.y = this.openCors.y;
     }
 
     update() {
+        const ANIMATION_SPEED = 0.05;
+        if (this.open) this.animation = Math.min(this.animation + ANIMATION_SPEED, 1);
+        else this.animation = Math.max(this.animation - ANIMATION_SPEED, 0);
 
+        const ease = Math.easeInOut(this.animation);
+        this.x = this.openCors.x * ease + this.closedCors.x * (1 - ease);
+        this.y = this.openCors.y * ease + this.closedCors.y * (1 - ease);
     }
 
     draw() {
-        if(!this.open) return;
-        
         ctx.save();
         ctx.translate(this.x, this.y);
 
@@ -65,15 +80,10 @@ class Inventory {
             ctx.translate(cors.x, cors.y);
             if (mouseHovering) ctx.scale(1.1, 1.1);
 
-            this.drawItem(item);
+            item.draw();
 
             ctx.restore();
         }
-    }
-
-    drawItem(item) {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(-25, -25, 50, 50);
     }
 
     getLocalSlotCors(slotIndex) {

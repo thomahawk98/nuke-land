@@ -14,6 +14,13 @@ class User {
     update() {
         this.cam.update();
         this.interface.update();
+        this.updateControls();
+    }
+
+    updateControls() {
+        if (this.keys.up['e']) {
+            this.interface.inventoryManager.toggle();
+        }
     }
 
     draw() {
