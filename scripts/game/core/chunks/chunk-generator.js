@@ -106,7 +106,7 @@ class ChunkGenerator {
         const { x: lsx, y: lsy } = chunk.worldToLocalCors(structure.x, structure.y);
         if (lsx < 0 || lsx >= chunk.SIZE || lsy < 0 || lsy >= chunk.SIZE) return console.log('lol what this structure doesnt go here stupid');
 
-        const angle = Math.round(Math.random() * 360);
+        const angle = 90 * Math.floor(Math.random() * 4)//Math.round(Math.random() * 360 / 90) * 90;
         for (const blockTemplate of structure.blocks) {
             // update the block cors to be relative to the chunk
             const block = structuredClone(blockTemplate);
@@ -114,9 +114,6 @@ class ChunkGenerator {
             const cors = Math.rotate(0, 0, block.x, block.y, angle);
             block.x = cors.x + lsx;
             block.y = cors.y + lsy;
-
-            block.x += lsx;
-            block.y += lsy;
 
             // detect if the block is outside the chunk
             const outsideChunk = block.x < 0 || block.x >= chunk.SIZE || block.y < 0 || block.y >= chunk.SIZE;
