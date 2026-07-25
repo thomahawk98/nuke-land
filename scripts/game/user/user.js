@@ -31,6 +31,10 @@ class User {
             this.interface.inventoryManager.closeAllInventories();
         }
 
+        if(this.keys.up['g']) {
+            game.world.pathfindingGrid.enabled = !game.world.pathfindingGrid.enabled;
+        }
+
         // pass controls onto player or inventory manager depending on if an inventory is open
         const anyInventoryOpen = this.interface.inventoryManager.getOpenInventoryCount() > 0;
         if (anyInventoryOpen) {
