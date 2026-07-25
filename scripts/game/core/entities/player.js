@@ -28,9 +28,9 @@ class Player extends Entity {
         if(!inRenderDistance) return false;
 
         const angle = Math.dirTo(this.x, this.y, o.x, o.y);
-        const distance = Math.dirTo(this.x, this.y, o.x, o.y);
-        const lineOfSightBlock = raycast(this.x, this.y, angle, distance);
-        if(lineOfSightBlock) return false;
+        const distance = Math.distTo(this.x, this.y, o.x, o.y);
+        const lineOfSightBlocked = raycast(this.x, this.y, angle, distance);
+        if(lineOfSightBlocked) return false;
 
         return true;
     }
