@@ -5,6 +5,18 @@ class InventoryManager {
     }
 
     update() {
+        // sort player inventories to the bottom
+        this.displayedInventories = this.displayedInventories
+            .sort((a, b) => {
+                const aValue = a.container.type == 'player' ? 1 : 0;
+                const bValue = b.container.type == 'player' ? 1 : 0;
+                return aValue - bValue;
+            });
+
+        // space inventories evenly on the y axis
+        this.spaceInventories();
+
+        // update all the inventories
         for (const inventory of this.displayedInventories) {
             inventory.update();
         }
@@ -12,6 +24,24 @@ class InventoryManager {
         // filter out inventories that arent open and animation is 0
         this.displayedInventories = this.displayedInventories
             .filter(a => a.open || a.animation > 0);
+    }
+
+    spaceInventories(cx = canvas.width * 0.5, cy = canvas.height * 0.5, gap = 50) {
+        const contentHeight =
+            this.displayedInventories.reduce((sum, inv) => sum + inv.totalHeight, 0) +
+            gap * (this.displayedInventories.length - 1);
+
+        // top of the entire stack
+        let y = cy - contentHeight * 0.5;
+
+        for (const inventory of this.displayedInventories) {
+            // position inventory by its center
+            inventory.openCors.x = cx;
+            inventory.openCors.y = y + inventory.totalHeight * 0.5;
+
+            // advance to the next inventory
+            y += inventory.totalHeight + gap;
+        }
     }
 
     updateControls() { // called by user updateControls() function
@@ -63,7 +93,7 @@ class InventoryManager {
             this.openInventory(player.inventory);
 
             // open all chests in player's vacinity
-            const RANGE = 5;
+            const RANGE = 3;
             for (let x = -RANGE; x <= RANGE; x++) {
                 for (let y = -RANGE; y <= RANGE; y++) {
                     // check if a block exists and if it's a chest
