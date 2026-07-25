@@ -22,6 +22,7 @@ class Entity {
         this.knockback = 0.25;
         this.meleReload = 0;
         this.maxMeleReload = 50;
+        this.angleOfAttack = 75; // only matters for the player
     }
 
     update() {
@@ -101,6 +102,7 @@ class Entity {
             range: this.range,
             knockback: this.knockback,
             maxMeleReload: this.maxMeleReload,
+            angleOfAttack: this.angleOfAttack
         };
 
         if (this.meleReload > 0) return;

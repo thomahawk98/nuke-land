@@ -57,6 +57,8 @@ class Item {
                     damage: 25,
                     knockback: 0.35,
                     range: 4.5,
+                    maxMeleReload: 60,
+                    angleOfAttack: 45,
                 };
             case 'axe':
                 return {
@@ -65,6 +67,7 @@ class Item {
                     knockback: 0.5,
                     range: 3.5,
                     maxMeleReload: 100,
+                    angleOfAttack: 90,
                 };
             default: return {}
         }

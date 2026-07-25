@@ -48,4 +48,8 @@ class User {
         this.mouse.clear();
         this.keys.clear();
     }
+
+    getMouseWorldCors() {
+        return this.cam.screenToWorld(this.mouse.x, this.mouse.y);
+    }
 }
