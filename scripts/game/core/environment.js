@@ -29,7 +29,7 @@ class Environment {
             }
 
             const visible = game.getPlayer().isObjectVisible(o);
-            if (!visible) ctx.globalAlpha = 0.25;
+            if (!visible) continue;//ctx.globalAlpha = 0.25;
 
             // translate to object position
             ctx.save();

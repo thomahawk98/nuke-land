@@ -17,6 +17,10 @@ class ChunkManager {
             this.generateChunksAroundPlayer(player);
             this.prevPlayerCors = chunkCors;
         }
+
+        for(const chunk of this.chunks.values()) {
+            chunk.update();
+        }
     }
 
     getBlock(wx, wy) {

@@ -25,12 +25,12 @@ class Player extends Entity {
 
     isObjectVisible(o) {
         const inRenderDistance = this.isObjectInRenderDistance(o);
-        if(!inRenderDistance) return false;
+        if (!inRenderDistance) return false;
 
         const angle = Math.dirTo(this.x, this.y, o.x, o.y);
         const distance = Math.distTo(this.x, this.y, o.x, o.y);
         const lineOfSightBlocked = raycast(this.x, this.y, angle, distance);
-        if(lineOfSightBlocked) return false;
+        if (lineOfSightBlocked) return false;
 
         return true;
     }
@@ -48,6 +48,7 @@ class Player extends Entity {
         this.updateAcceleration();
         this.updateMotion();
         this.inventory.updateItems();
+        this.updateLineOfSight();
 
         // prevent the player from being deleted idk
         this.delete = false;
@@ -88,12 +89,6 @@ class Player extends Entity {
 
     }
 
-    draw() {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(-0.5, -0.5, 1, 1);
-        this.drawHealthbar();
-    }
-
     getEnemiesInMeleAttackRange(item) {
         return game.world.env.objects
             .filter(a => {
@@ -116,5 +111,24 @@ class Player extends Entity {
                 // yay!
                 return true;
             });
+    }
+
+    updateLineOfSight() {
+        const amount = 60;
+        const distance = 10;
+        for (let n = 0; n < amount; n++) {
+            const angle = 360 / amount * n;
+            const blocks = raycast(this.x, this.y, angle, distance, true);
+            //console.log(blocks)
+            for (let block of blocks) {
+                block.visible = true;
+            }
+        }
+    }
+
+    draw() {
+        ctx.fillStyle = 'red';
+        ctx.fillRect(-0.5, -0.5, 1, 1);
+        this.drawHealthbar();
     }
 }

@@ -8,6 +8,12 @@ class Chunk {
         this.blocks = Array(SIZE * SIZE).fill(false);
     }
 
+    update() {
+        for (const block of this.blocks) {
+            if (typeof block == 'object') block.visible = false;
+        }
+    }
+
     worldToLocalCors(wx, wy) {
         return {
             x: wx - this.cx * this.SIZE,
@@ -56,15 +62,7 @@ class Chunk {
             const visibleToCam = user.cam.checkVisibilityOfRect(x, y);
             if (!visibleToCam) continue;
 
-            const player = game.getPlayer();
-            if (!player) continue;
-
-            const dist = Math.distTo(player.x, player.y, x, y);
-            const dir = Math.dirTo(player.x, player.y, x, y);
-            const lineOfSightBlocked = raycast(player.x, player.y, dir, dist);
-            if (lineOfSightBlocked) continue;
-
-            ctx.globalAlpha = o.solid ? 1 : 0.75;
+            ctx.globalAlpha = !o.visible ? 0.25 : o.solid ? 1 : 0.75;
 
             const color = this.getBlockColor(o);
             ctx.fillStyle = color;

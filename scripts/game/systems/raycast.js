@@ -1,4 +1,6 @@
-function raycast(x, y, angle, maxDistance = 100) {
+function raycast(x, y, angle, maxDistance = 100, returnAll = false) {
+    const allBlocks = [];
+
     const rads = (angle - 90) * Math.PI / 180;
     const dirX = Math.cos(rads);
     const dirY = Math.sin(rads);
@@ -19,8 +21,12 @@ function raycast(x, y, angle, maxDistance = 100) {
     while (distanceTraveled <= maxDistance) {
         // check if the current cell is solid
         const block = game.world.getBlock(cellX, cellY);
-        if (block && block.solid && block.type !== 'glass') {
-            return block; // return the first solid block that was hit
+        if (returnAll) allBlocks.push(block);
+
+        const blockIsSolid = block && block.solid && block.type !== 'glass';
+        if (blockIsSolid) {
+            if (returnAll) return allBlocks;
+            else return block; // return the first solid block that was hit
         }
 
         // Step along the axis with smallest tMax
@@ -44,5 +50,5 @@ function raycast(x, y, angle, maxDistance = 100) {
         }
     }
 
-    return null; // no hit within maxDistance
+    return returnAll ? allBlocks : null; // no hit within maxDistance
 }
