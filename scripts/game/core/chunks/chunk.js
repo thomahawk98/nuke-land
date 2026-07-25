@@ -53,11 +53,24 @@ class Chunk {
             if (!o) continue; // no block here
 
             const { x, y } = this.localToWorldCors(o.x, o.y);
-            const visible = user.cam.checkVisibilityOfRect(x, y);
+            const visibleToCam = user.cam.checkVisibilityOfRect(x, y);
+            if (!visibleToCam) continue;
+
+            const player = game.getPlayer();
+            if (!player) continue;
+
+            const dist = Math.distTo(player.x, player.y, x, y);
+            const dir = Math.dirTo(player.x, player.y, x, y);
+            const lineOfSightBlocked = raycast(player.x, player.y, dir, dist);
+            if (lineOfSightBlocked) continue;
+
+            ctx.globalAlpha = o.solid ? 1 : 0.75;
 
             const color = this.getBlockColor(o);
             ctx.fillStyle = color;
             ctx.fillRect(o.x, o.y, 1, 1);
+
+            ctx.globalAlpha = 1;
         }
     }
 
