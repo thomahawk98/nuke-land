@@ -33,11 +33,33 @@ class Interface {
 
             inventory.drawSlot(selected);
             inventory.drawItem(n, selected);
+            if (selected) this.drawMeleReloadOverlay(player);
 
             ctx.restore();
         }
 
         ctx.globalAlpha = 1;
+        ctx.restore();
+    }
+
+    drawMeleReloadOverlay(player) {
+        const item = player.inventory.getSelectedItem();
+        const percent = player.meleReload / (item.maxMeleReload || 100);
+
+        ctx.fillStyle = 'rgba(255,255,255,0.35)';
+        ctx.beginPath();
+        ctx.rect(-40, -40, 80, 80);
+        ctx.closePath();
+
+        ctx.save();
+        ctx.clip();
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, 60, -Math.PI * 0.5, -Math.PI * 0.5 + Math.PI * 2 * percent);
+        ctx.closePath();
+        ctx.fill();
+
         ctx.restore();
     }
 }

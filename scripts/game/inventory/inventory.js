@@ -39,6 +39,12 @@ class Inventory {
         this.y = this.openCors.y * ease + this.closedCors.y * (1 - ease);
     }
 
+    updateItems() {for (const item of this.items) {
+            if (!item) continue;
+            item.update();
+        }
+    }
+
     draw() {
         ctx.save();
         ctx.translate(this.x, this.y);

@@ -9,13 +9,25 @@ class Entity {
         this.accel = 0.01;
         this.accelTarget = { x: 0, y: 0 };
 
+        this.meleReload = 0;
+
+        this.health = 100;
+        this.maxHealth = 100;
+
         this.angle = 0;
         this.directionFricionMultipliers = { x: 1, y: 1 };
     }
 
     update() {
+        this.updateVitals();
         this.updateAcceleration();
         this.updateMotion();
+    }
+
+    updateVitals() {
+        if (this.meleReload > 0) this.meleReload--;
+        if (this.health <= 0) this.dead = true;
+        if (this.dead) this.delete = true;
     }
 
     updateAcceleration() {
@@ -49,5 +61,30 @@ class Entity {
 
         this.x += this.move.x;
         this.y += this.move.y;
+    }
+
+    drawHealthbar(x = 0, y = -0.75, size = 1) {
+        const percent = Math.clamp01(this.health / this.maxHealth);
+        ctx.save();
+        ctx.translate(x, y);
+
+        ctx.lineWidth = 0.25;
+        ctx.lineCap = 'round';
+
+        ctx.strokeStyle = 'rgb(0,100,0)';
+        ctx.beginPath();
+        ctx.moveTo(-size * 0.5, 0);
+        ctx.lineTo(size * 0.5, 0);
+        ctx.stroke();
+
+        if (percent !== 0) {
+            ctx.strokeStyle = 'rgb(0,255,0)';
+            ctx.beginPath();
+            ctx.moveTo(-size * 0.5, 0);
+            ctx.lineTo(-size * 0.5 + size * percent, 0);
+            ctx.stroke();
+        }
+
+        ctx.restore();
     }
 }

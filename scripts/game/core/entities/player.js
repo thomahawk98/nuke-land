@@ -14,7 +14,9 @@ class Player extends Entity {
                 this.inventory.items[n] = item;
             }
         }
-        this.inventory.items[0] = new Item('machete', { slot: 0 });
+
+        this.inventory.items[0] = new Item('axe', { slot: 0 });
+        this.inventory.items[1] = new Item('machete', { slot: 1 });
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
@@ -29,8 +31,10 @@ class Player extends Entity {
     }
 
     update() {
+        this.updateVitals();
         this.updateAcceleration();
         this.updateMotion();
+        this.inventory.updateItems();
     }
 
     updateControls() { // called by user updateControls() function
@@ -65,11 +69,17 @@ class Player extends Entity {
     }
 
     performMeleAttack(item) {
-        if (!item) item = {};
-        item.type ??= 'fists';
-        item.damage ??= 10;
-        item.range ??= 2;
-        item.knockback ??= 0.25;
+        if (!item) item = {
+            type: 'fists',
+            damage: 10,
+            range: 2,
+            knockback: 0.25,
+            meleReload: 0,
+            maxMeleReload: 50,
+        };
+
+        if (this.meleReload > 0) return;
+        this.meleReload = item.maxMeleReload;
 
         const enemies = this.getEnemiesInMeleAttackRange(item);
         for (const enemy of enemies) {
@@ -90,5 +100,6 @@ class Player extends Entity {
     draw() {
         ctx.fillStyle = 'red';
         ctx.fillRect(-0.5, -0.5, 1, 1);
+        this.drawHealthbar();
     }
 }

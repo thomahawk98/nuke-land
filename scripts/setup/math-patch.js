@@ -15,6 +15,9 @@ const mathPatch = {
     clamp: function (value, min, max) {
         return Math.min(Math.max(value, min), max);
     },
+    clamp01: function (value) {
+        return Math.clamp(value, 0, 1);
+    },
     distTo: function (x1, y1, x2, y2) {
         return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     },

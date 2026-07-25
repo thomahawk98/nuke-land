@@ -14,6 +14,11 @@ class Item {
         for (const [key, value] of Object.entries(stats)) {
             this[key] = value;
         }
+
+        this.damage ??= 1;
+        this.range ??= 2;
+        this.knockback ??= 0.2;
+        this.maxMeleReload ??= 50;
     }
 
     static getStatsForType(type) {
@@ -34,6 +39,7 @@ class Item {
     static getMaxStackSizeForType(type) {
         switch (type) {
             case 'machete':
+            case 'axe':
                 return 1;
             default: return 99;
         }
@@ -50,32 +56,45 @@ class Item {
                     color: 'silver',
                     damage: 25,
                     knockback: 0.35,
-                    range: 4,
+                    range: 4.5,
+                };
+            case 'axe':
+                return {
+                    color: 'red',
+                    damage: 50,
+                    knockback: 0.5,
+                    range: 3.5,
+                    maxMeleReload: 100,
                 };
             default: return {}
         }
+    }
+
+    update() {
     }
 
     draw() {
         ctx.fillStyle = this.color ? this.color : 'red';
         ctx.fillRect(-25, -25, 50, 50);
 
-        if (this.count !== 1) {
-            const x = 20, y = -20;
+        if (this.count !== 1) this.drawCount();
+    }
 
-            ctx.save();
-            ctx.translate(x, y);
+    drawCount() {
+        const x = 20, y = -20;
 
-            ctx.fillStyle = 'black';
-            ctx.fillRect(-10, -10, 20, 20);
+        ctx.save();
+        ctx.translate(x, y);
 
-            ctx.fillStyle = 'white';
-            ctx.font = '14px Arial';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(this.count, 0, 0)
+        ctx.fillStyle = 'black';
+        ctx.fillRect(-10, -10, 20, 20);
 
-            ctx.restore();
-        }
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.count, 0, 0)
+
+        ctx.restore();
     }
 }

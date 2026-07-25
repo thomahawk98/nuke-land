@@ -4,6 +4,9 @@ class Zombie extends Entity {
         this.type = 'zombie';
         this.accel = 0.005;
 
+        this.health = 200;
+        this.maxHealth = 200;
+
         this.detectionRange = 20;
         this.targetPosition = { x, y };
 
@@ -14,6 +17,7 @@ class Zombie extends Entity {
     }
 
     update() {
+        this.updateVitals();
         this.updateTargetToPlayer();
         if (this.randomWaitTime > 0) {
             this.randomWaitTime--;
@@ -67,5 +71,6 @@ class Zombie extends Entity {
     draw() {
         ctx.fillStyle = 'rgb(0,200,0)';
         ctx.fillRect(-0.5, -0.5, 1, 1);
+        this.drawHealthbar();
     }
 }
