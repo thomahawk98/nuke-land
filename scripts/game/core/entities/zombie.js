@@ -13,6 +13,11 @@ class Zombie extends Entity {
         this.randomWaitTime = Math.round(Math.random() * 500);
         this.urgency = 0.99;
 
+        this.damage = 20;
+        this.range = 1;
+        this.knockback = 0.2;
+        this.maxMeleReload = 100;
+
         this.pathFinder = new PathFinder(this, game.world.pathfindingGrid);
     }
 
@@ -21,13 +26,17 @@ class Zombie extends Entity {
         this.updateTargetToPlayer();
         if (this.randomWaitTime > 0) {
             this.randomWaitTime--;
-            if(this.randomWaitTime <= 0) this.pickRandomTarget();
+            if (this.randomWaitTime <= 0) this.pickRandomTarget();
         } else {
             this.updatePathToTarget();
             this.followPath();
         }
         this.updateAcceleration();
         this.updateMotion();
+        
+        // update to use item if zombies can hold items
+        const enemiesInRange = this.getEnemiesInMeleAttackRange();
+        if (enemiesInRange.length !== 0) this.performMeleAttack();
     }
 
     updateTargetToPlayer() {

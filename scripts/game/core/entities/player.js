@@ -35,6 +35,9 @@ class Player extends Entity {
         this.updateAcceleration();
         this.updateMotion();
         this.inventory.updateItems();
+
+        // prevent the player from being deleted idk
+        this.delete = false;
     }
 
     updateControls() { // called by user updateControls() function
@@ -68,38 +71,17 @@ class Player extends Entity {
         }
     }
 
-    performMeleAttack(item) {
-        if (!item) item = {
-            type: 'fists',
-            damage: 10,
-            range: 2,
-            knockback: 0.25,
-            meleReload: 0,
-            maxMeleReload: 50,
-        };
-
-        if (this.meleReload > 0) return;
-        this.meleReload = item.maxMeleReload;
-
-        const enemies = this.getEnemiesInMeleAttackRange(item);
-        for (const enemy of enemies) {
-            enemy.health -= item.damage;
-
-            const angle = Math.dirTo(this.x, this.y, enemy.x, enemy.y);
-            const knockback = Math.distToMove(item.knockback, angle);
-            enemy.move.x += knockback.x;
-            enemy.move.y += knockback.y;
-        }
-    }
-
-    getEnemiesInMeleAttackRange(item) {
-        return game.world.env.objects
-            .filter(a => a !== this && Math.distTo(this.x, this.y, a.x, a.y) < item.range);
-    }
-
     draw() {
         ctx.fillStyle = 'red';
         ctx.fillRect(-0.5, -0.5, 1, 1);
         this.drawHealthbar();
+    }
+
+    getEnemiesInMeleAttackRange(item) {
+        return game.world.env.objects
+            .filter(a =>
+                Math.distTo(this.x, this.y, a.x, a.y) < item.range &&
+                this.isEnemy(a)
+            );
     }
 }

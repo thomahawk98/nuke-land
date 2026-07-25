@@ -16,6 +16,12 @@ class Entity {
 
         this.angle = 0;
         this.directionFricionMultipliers = { x: 1, y: 1 };
+
+        this.damage = 10;
+        this.range = 2;
+        this.knockback = 0.25;
+        this.meleReload = 0;
+        this.maxMeleReload = 50;
     }
 
     update() {
@@ -86,5 +92,41 @@ class Entity {
         }
 
         ctx.restore();
+    }
+
+    performMeleAttack(item) {
+        if (!item) item = {
+            type: 'fists',
+            damage: this.damage,
+            range: this.range,
+            knockback: this.knockback,
+            maxMeleReload: this.maxMeleReload,
+        };
+
+        if (this.meleReload > 0) return;
+        this.meleReload = item.maxMeleReload;
+
+        const enemies = this.getEnemiesInMeleAttackRange(item);
+        for (const enemy of enemies) {
+            enemy.health -= item.damage;
+
+            const angle = Math.dirTo(this.x, this.y, enemy.x, enemy.y);
+            const knockback = Math.distToMove(item.knockback, angle);
+            enemy.move.x += knockback.x;
+            enemy.move.y += knockback.y;
+        }
+    }
+
+    getEnemiesInMeleAttackRange(item) {
+        const range = item ? item.range : this.range;
+        return game.world.env.objects
+            .filter(a =>
+                Math.distTo(this.x, this.y, a.x, a.y) < range &&
+                this.isEnemy(a)
+            );
+    }
+
+    isEnemy(o) {
+        return o !== this;
     }
 }
