@@ -16,7 +16,7 @@ const setup = {
         document.body.style.backgroundColor = "rgb(50,50,50)";
         document.body.style.margin = 0;
 
-        canvas.style.backgroundColor = 'rgb(255,255,255)';
+        canvas.style.backgroundColor = 'rgb(0,0,0)';
         canvas.style.margin = 0;
         canvas.style.position = "absolute";
         canvas.style.top = "50%";

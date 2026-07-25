@@ -27,12 +27,6 @@ class Game {
         ctx.save();
         user.cam.alignViewport();
 
-        ctx.fillStyle = 'black';
-        ctx.font = '2px super-crawler';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('Hello, World!', 0, 0);
-
         this.world.draw();
 
         ctx.restore();
