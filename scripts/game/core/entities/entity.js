@@ -23,6 +23,8 @@ class Entity {
         this.meleReload = 0;
         this.maxMeleReload = 50;
         this.angleOfAttack = 75; // only matters for the player
+
+        this.invincibility = 0;
     }
 
     update() {
@@ -33,6 +35,7 @@ class Entity {
 
     updateVitals() {
         if (this.meleReload > 0) this.meleReload--;
+        if (this.invincibility > 0) this.invincibility--;
         if (this.health <= 0) this.dead = true;
         if (this.dead) this.delete = true;
     }
@@ -71,6 +74,8 @@ class Entity {
     }
 
     drawHealthbar(x = 0, y = -0.75, size = 1) {
+        if(this.invincibility % 25 > 12.5) return;
+
         const percent = Math.clamp01(this.health / this.maxHealth);
         ctx.save();
         ctx.translate(x, y);
@@ -110,7 +115,7 @@ class Entity {
 
         const enemies = this.getEnemiesInMeleAttackRange(item);
         for (const enemy of enemies) {
-            enemy.health -= item.damage;
+            enemy.takeDamage(item.damage);
 
             const angle = Math.dirTo(this.x, this.y, enemy.x, enemy.y);
             const knockback = Math.distToMove(item.knockback, angle);
@@ -124,11 +129,18 @@ class Entity {
         return game.world.env.objects
             .filter(a =>
                 Math.distTo(this.x, this.y, a.x, a.y) < range &&
-                this.isEnemy(a)
+                this.isEnemy(a) &&
+                a.invincibility == 0
             );
     }
 
     isEnemy(o) {
         return o !== this;
+    }
+
+    takeDamage(amount) {
+        if(this.invincibility > 0) return; // can't be damaged
+        this.health -= amount;
+        this.invincibility = 100; // 0.5s of invincibility after taking damage
     }
 }
