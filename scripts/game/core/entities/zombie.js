@@ -14,7 +14,7 @@ class Zombie extends Entity {
         this.urgency = 0.99;
 
         this.damage = 40;
-        this.range = 1;
+        this.range = 1.25;
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 

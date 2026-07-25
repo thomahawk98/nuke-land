@@ -17,6 +17,7 @@ class Player extends Entity {
 
         this.inventory.items[0] = new Item('axe', { slot: 0 });
         this.inventory.items[1] = new Item('machete', { slot: 1 });
+        this.inventory.items[2] = new Item('bat', { slot: 2 });
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
@@ -69,6 +70,10 @@ class Player extends Entity {
         } else {
             this.performMeleAttack(item);
         }
+    }
+
+    useItem() {
+
     }
 
     draw() {

@@ -76,8 +76,20 @@ const setup = {
             ctx.stroke();
         }
 
+        ctx.fillCirc = function(x, y, r) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        ctx.strokeCirc = function(x, y, r) {
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
         ctx.f = function (size) {
-            ctx.font = `bold ${size}px kdamthmorepro`;
+            ctx.font = `${size}px super-crawler`;
         }
 
         ctx.regularPolygon = function (x, y, s, r, a = 0) {

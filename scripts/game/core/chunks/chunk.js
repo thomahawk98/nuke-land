@@ -8,11 +8,18 @@ class Chunk {
         this.blocks = Array(SIZE * SIZE).fill(false);
     }
 
+    worldToLocalCors(wx, wy) {
+        return {
+            x: wx - this.cx * this.SIZE,
+            y: wy - this.cy * this.SIZE,
+        };
+    }
+
     localToWorldCors(lx, ly) {
         return {
             x: lx + this.cx * this.SIZE,
             y: ly + this.cy * this.SIZE,
-        }
+        };
     }
 
     setBlock(block) {

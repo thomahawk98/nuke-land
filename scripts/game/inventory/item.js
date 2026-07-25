@@ -54,16 +54,25 @@ class Item {
             case 'machete':
                 return {
                     color: 'silver',
-                    damage: 25,
-                    knockback: 0.35,
+                    damage: 35,
+                    knockback: 0.25,
                     range: 4.5,
-                    maxMeleReload: 60,
+                    maxMeleReload: 75,
                     angleOfAttack: 45,
                 };
             case 'axe':
                 return {
                     color: 'red',
-                    damage: 50,
+                    damage: 65,
+                    knockback: 0.35,
+                    range: 3.5,
+                    maxMeleReload: 150,
+                    angleOfAttack: 75,
+                };
+            case 'bat':
+                return {
+                    color: 'tan',
+                    damage: 25,
                     knockback: 0.5,
                     range: 3.5,
                     maxMeleReload: 100,

@@ -44,7 +44,7 @@ class Interface {
 
     drawMeleReloadOverlay(player) {
         const item = player.inventory.getSelectedItem();
-        const percent = player.meleReload / (item.maxMeleReload || 100);
+        const percent = player.meleReload / (item.maxMeleReload || player.maxMeleReload);
 
         ctx.fillStyle = 'rgba(255,255,255,0.35)';
         ctx.beginPath();

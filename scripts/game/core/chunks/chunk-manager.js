@@ -2,9 +2,9 @@ class ChunkManager {
     constructor(seed) {
         this.seed = seed;
 
+        this.CHUNK_SIZE = 16;
         this.generator = new ChunkGenerator(this);
         this.chunks = new Map();
-        this.CHUNK_SIZE = 16;
 
         this.prevPlayerCors = {};
     }
@@ -22,12 +22,32 @@ class ChunkManager {
     getBlock(wx, wy) {
         const chunkCors = this.getChunkCors(wx, wy);
         const chunk = this.getChunk(chunkCors.x, chunkCors.y);
-        if(!chunk) return false; // no chunk at block location
+        if (!chunk) return false; // no chunk at block location
 
-        const lx = Math.modulo(wx, this.CHUNK_SIZE);
-        const ly = Math.modulo(wy, this.CHUNK_SIZE);
+        const lx = Math.floor(Math.modulo(wx, this.CHUNK_SIZE));
+        const ly = Math.floor(Math.modulo(wy, this.CHUNK_SIZE));
         const block = chunk.getBlock(lx, ly);
         return block;
+    }
+
+    setBlock(wx, wy, block) {
+        const chunkCors = this.getChunkCors(wx, wy);
+        const chunk = this.getChunk(chunkCors.x, chunkCors.y);
+
+        // set the local cors of the block
+        const lx = Math.floor(Math.modulo(wx, this.CHUNK_SIZE));
+        const ly = Math.floor(Math.modulo(wy, this.CHUNK_SIZE));
+        block.x = lx;
+        block.y = ly;
+
+        if (chunk) { // there is a chunk there, set the block in the chunk
+            chunk.setBlock(block);
+            return true;
+        } else { // no chunk at block location, store the blocks for later
+            const key = this.getChunkKey(chunkCors.x, chunkCors.y);
+            this.generator.storeBlock(key, block);
+            return false;
+        }
     }
 
     getChunk(cx, cy) {

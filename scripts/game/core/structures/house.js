@@ -1,0 +1,9 @@
+class House {
+    constructor(x, y) {
+        this.x = Math.floor(x);
+        this.y = Math.floor(y);
+        this.blocks = [
+            
+        ];
+    }
+}
