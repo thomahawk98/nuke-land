@@ -1,5 +1,9 @@
 class World {
     constructor() {
+        this.daylight = 0.5;
+        this.DAY_LENGTH_SECONDS = 3;
+        this.NIGHT_LENGTH_SECONDS = 1;
+
         this.seed = Math.round(Math.random() * 10000);
         this.chunkManager = new ChunkManager(this.seed);
         this.structureManager = new StructureManager(this.seed);
@@ -8,10 +12,56 @@ class World {
     }
 
     update() {
+        this.updateDaylight();
         this.chunkManager.update();
         this.structureManager.update();
         this.pathfindingGrid.update();
         this.env.update();
+    }
+
+    updateDaylight() {
+        const dayLength = this.DAY_LENGTH_SECONDS * 100;
+        const nightLength = this.NIGHT_LENGTH_SECONDS * 100;
+        const minDaylight = 0.5;
+        const maxDaylight = 1.0;
+        const light = this.getDaylight(game.t, dayLength, nightLength, minDaylight, maxDaylight);
+        this.daylight = light;
+    }
+
+    getDaylight(time, dayLength, nightLength, minDaylight, maxDaylight) {
+        const transition = Math.min(dayLength, nightLength) * 0.25;
+
+        const cycleLength = dayLength + nightLength;
+        const t = ((time % cycleLength) + cycleLength) % cycleLength;
+
+        // Smooth interpolation
+        const smooth = x => x * x * (3 - 2 * x);
+
+        // Sunrise
+        if (t < transition) {
+            return Math.lerp(
+                minDaylight,
+                maxDaylight,
+                smooth(t / transition)
+            );
+        }
+
+        // Day
+        if (t < dayLength - transition) {
+            return maxDaylight;
+        }
+
+        // Sunset
+        if (t < dayLength) {
+            return Math.lerp(
+                maxDaylight,
+                minDaylight,
+                smooth((t - (dayLength - transition)) / transition)
+            );
+        }
+
+        // Night
+        return minDaylight;
     }
 
     reset() {

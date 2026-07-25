@@ -48,7 +48,6 @@ class Player extends Entity {
         this.updateAcceleration();
         this.updateMotion();
         this.inventory.updateItems();
-        this.updateLineOfSight();
 
         // prevent the player from being deleted idk
         this.delete = false;
@@ -114,14 +113,17 @@ class Player extends Entity {
     }
 
     updateLineOfSight() {
-        const amount = 60;
-        const distance = 10;
+        const distance = 60;
+        const amount = 360;
+        const lightStrength = 0.5 + 0.5 * game.world.daylight;
         for (let n = 0; n < amount; n++) {
             const angle = 360 / amount * n;
-            const blocks = raycast(this.x, this.y, angle, distance, true);
-            //console.log(blocks)
-            for (let block of blocks) {
-                block.visible = true;
+            const blocks = raycast(Math.round(this.x), Math.round(this.y), angle, distance, true);
+            for (let n = 0; n < blocks.length; n++) {
+                const block = blocks[n];
+                if(!block) continue;
+                const light = Math.pow(lightStrength, n);
+                block.light += light;
             }
         }
     }

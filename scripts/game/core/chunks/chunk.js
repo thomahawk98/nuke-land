@@ -8,9 +8,9 @@ class Chunk {
         this.blocks = Array(SIZE * SIZE).fill(false);
     }
 
-    update() {
+    updateBlockLighting() {
         for (const block of this.blocks) {
-            if (typeof block == 'object') block.visible = false;
+            if (typeof block == 'object') block.light = 0.1; // out of sight block
         }
     }
 
@@ -62,7 +62,9 @@ class Chunk {
             const visibleToCam = user.cam.checkVisibilityOfRect(x, y);
             if (!visibleToCam) continue;
 
-            ctx.globalAlpha = !o.visible ? 0.25 : o.solid ? 1 : 0.75;
+            const light = o.light//Math.max(game.world.daylight, o.light);
+            const alpha = Math.clamp01(light * (o.solid ? 1 : 0.75));
+            ctx.globalAlpha = alpha;
 
             const color = this.getBlockColor(o);
             ctx.fillStyle = color;

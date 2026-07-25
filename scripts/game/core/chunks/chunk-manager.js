@@ -6,21 +6,23 @@ class ChunkManager {
         this.generator = new ChunkGenerator(this);
         this.chunks = new Map();
 
-        this.prevPlayerCors = {};
+        this.prevPlayerChunkCors = {};
     }
 
     update() {
         // check if player moved between chunks
         const player = game.getPlayer();
         const chunkCors = this.getChunkCors(player.x, player.y);
-        if (chunkCors.x !== this.prevPlayerCors.x || chunkCors.y !== this.prevPlayerCors.y) {
+        if (chunkCors.x !== this.prevPlayerChunkCors.x || chunkCors.y !== this.prevPlayerChunkCors.y) {
             this.generateChunksAroundPlayer(player);
-            this.prevPlayerCors = chunkCors;
+            this.prevPlayerChunkCors = chunkCors;
         }
 
-        for(const chunk of this.chunks.values()) {
-            chunk.update();
+        //update lighting
+        for (const chunk of this.chunks.values()) {
+            chunk.updateBlockLighting();
         }
+        player.updateLineOfSight();
     }
 
     getBlock(wx, wy) {
