@@ -36,7 +36,7 @@ class Chunk {
             const CHEST_SIZE = 3;
             block.inventory = new Inventory(block, CHEST_SIZE, CHEST_SIZE);
 
-            const chestContents = generateChestContents(CHEST_SIZE * CHEST_SIZE, 'test chest');
+            const chestContents = generateChestContents(CHEST_SIZE * CHEST_SIZE, block.lootPool);
             block.inventory.items = chestContents;
         }
 

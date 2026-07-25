@@ -124,7 +124,7 @@ class Player extends Entity {
         const lightStrength = 0.5 + 0.5 * game.world.daylight;
         for (let n = 0; n < amount; n++) {
             const angle = 360 / amount * n;
-            const blocks = raycast(Math.round(this.x), Math.round(this.y), angle, distance, true);
+            const blocks = raycast(Math.floor(this.x), Math.floor(this.y), angle, distance, true);
             for (let n = 0; n < blocks.length; n++) {
                 const block = blocks[n];
                 if (!block) continue;

@@ -1,4 +1,4 @@
-function generateChestContents(amount, lootPool) {
+function generateChestContents(amount, lootPool = 'test chest') {
     const contents = Array(amount).fill(false);
     for (let n = 0; n < amount; n++) {
         const itemChance = 0.1;
