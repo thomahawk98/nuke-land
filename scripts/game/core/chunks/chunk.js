@@ -76,7 +76,7 @@ class Chunk {
             case 'dead grass':
                 return 'rgb(46, 82, 25)';
             case 'dirt':
-                return 'rgb(94, 74, 20)';
+                return 'rgb(95, 27, 0)';
             case 'gravel':
                 return 'rgb(129, 109, 96)';
             case 'stone':
@@ -85,6 +85,16 @@ class Chunk {
                 return 'rgb(225, 225, 225)';
             case 'chest':
                 return 'rgb(58, 28, 2)';
+            case 'door':
+                return 'rgb(74, 82, 32)';
+            case 'planks':
+                return 'rgb(175, 114, 61)';
+            case 'bricks':
+                return 'rgb(95, 26, 26)';
+            case 'wool':
+                return 'rgb(197, 24, 24)';
+            case 'glass':
+                return 'rgb(168, 220, 255)';
             default:
                 return 'rgb(255,0,255)';
         }

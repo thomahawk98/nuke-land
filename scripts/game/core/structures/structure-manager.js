@@ -13,7 +13,7 @@ class StructureManager {
 
         const height = game.world.chunkManager.generator.getHeightAt(wx, wy);
         const blockType = game.world.chunkManager.generator.getBlockTypeFromHeightValue(height);
-        const onGrass = blockType == 'grass'//(blockType == 'dry grass' || blockType == 'grass' || blockType == 'dead grass');
+        const onGrass = blockType == 'grass';//(blockType == 'dry grass' || blockType == 'grass' || blockType == 'dead grass');
         if (!onGrass) return false;
 
         const structure = this.attemptStructureGeneration(wx, wy);

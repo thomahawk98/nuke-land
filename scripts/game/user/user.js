@@ -19,7 +19,7 @@ class User {
 
     updateControls() {
         const player = game.getPlayer();
-        if (!player) return console.error('player not defined');
+        if (!player) return// console.error('player not defined');
         
         // toggle player inventory
         if (this.keys.up['e']) {
