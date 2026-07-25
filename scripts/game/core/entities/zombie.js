@@ -82,4 +82,8 @@ class Zombie extends Entity {
         ctx.fillRect(-0.5, -0.5, 1, 1);
         this.drawHealthbar();
     }
+
+    isEnemy(o) {
+        return o.type == 'player';
+    }
 }
