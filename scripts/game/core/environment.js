@@ -28,6 +28,9 @@ class Environment {
                 continue;
             }
 
+            const visible = game.getPlayer().isObjectVisible(o);
+            if (!visible) continue;
+
             // translate to object position
             ctx.save();
             ctx.translate(o.x, o.y);

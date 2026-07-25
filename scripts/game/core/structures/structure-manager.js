@@ -38,13 +38,7 @@ class StructureManager {
         }
 
         // add the structure
-        const structure = {
-            x: cors.x,
-            y: cors.y,
-            blocks: [
-                { x: 0, y: 0, type: 'stone' }
-            ]
-        };
+        const structure = new House(cors.x, cors.y);
         
         this.structures.push(structure);
         return structure;

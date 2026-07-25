@@ -56,7 +56,7 @@ class StructureEditor {
             const structure = [...this.blocks.values()]
                 .sort((a, b) => a.y - b.y || a.x - b.x);
 
-            console.log(structure);
+            console.log(JSON.stringify(structure));
         }
     }
 

@@ -5,8 +5,8 @@ const user = new User(canvas);
 const game = new Game();
 const loader = new Loader();
 const editor = new StructureEditor();
-editor.enabled = true;
-user.cam.locked = false;
+//editor.enabled = true;
+//user.cam.locked = false;
 
 // set up the project
 const title = "Nuke Land";

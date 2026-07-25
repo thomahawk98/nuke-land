@@ -23,6 +23,18 @@ class Player extends Entity {
         this.RENDER_DISTANCE = 4;
     }
 
+    isObjectVisible(o) {
+        const inRenderDistance = this.isObjectInRenderDistance(o);
+        if(!inRenderDistance) return false;
+
+        const angle = Math.dirTo(this.x, this.y, o.x, o.y);
+        const distance = Math.dirTo(this.x, this.y, o.x, o.y);
+        const lineOfSightBlock = raycast(this.x, this.y, angle, distance);
+        if(lineOfSightBlock) return false;
+
+        return true;
+    }
+
     isObjectInRenderDistance(o) {
         const { x: ox, y: oy } = game.world.chunkManager.getChunkCors(o.x, o.y);
         const { x: px, y: py } = game.world.chunkManager.getChunkCors(this.x, this.y);
