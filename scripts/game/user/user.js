@@ -18,18 +18,18 @@ class User {
     }
 
     updateControls() {
-        if (this.keys.up['e']) {
-            this.interface.inventoryManager.toggle();
-        }
-        if (this.keys.up['esc']) {
-            this.interface.inventoryManager.closeAllInventories();
-            for (const inventory of this.interface.inventoryManager.displayedInventories) {
-                this.closeInventory(inventory);
-            }
-        }
-
         const player = game.getPlayer();
         if (!player) return console.error('player not defined');
+        
+        // toggle player inventory
+        if (this.keys.up['e']) {
+            this.interface.inventoryManager.toggle(player);
+        }
+
+        // close all inventories
+        if (this.keys.up['esc']) {
+            this.interface.inventoryManager.closeAllInventories();
+        }
 
         // pass controls onto player or inventory manager depending on if an inventory is open
         const anyInventoryOpen = this.interface.inventoryManager.getOpenInventoryCount() > 0;

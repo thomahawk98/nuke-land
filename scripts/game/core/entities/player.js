@@ -82,11 +82,11 @@ class Player extends Entity {
             .filter(a => {
                 // check if object is an enemy
                 const isEnemy = this.isEnemy(a);
-                if(!isEnemy) return false;
+                if (!isEnemy) return false;
 
                 // check if enemy is outside of range
                 const dist = Math.distTo(this.x, this.y, a.x, a.y);
-                if(dist > item.range) return false;
+                if (dist > item.range) return false;
 
                 // check if enemy is outside angle of attack
                 const world = this.user.getMouseWorldCors();
@@ -94,7 +94,7 @@ class Player extends Entity {
                 const angle = Math.dirTo(this.x, this.y, a.x, a.y);
                 const angleToMouse = Math.dirTo(this.x, this.y, world.x, world.y);
                 const angleDifference = Math.abs(Math.turn(angle, angleToMouse));
-                if(angleDifference > angleOfAttack) return false;
+                if (angleDifference > angleOfAttack) return false;
 
                 // yay!
                 return true;

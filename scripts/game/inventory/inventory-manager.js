@@ -55,15 +55,29 @@ class InventoryManager {
         return false;
     }
 
-    toggle() {
+    toggle(player) {
         const openInventoryCount = this.getOpenInventoryCount();
         if (openInventoryCount > 0) {
             this.closeAllInventories();
         } else {
-            const player = game.getPlayer();
-            if (!player) return;
-
             this.openInventory(player.inventory);
+
+            // open all chests in player's vacinity
+            const RANGE = 5;
+            for (let x = -RANGE; x <= RANGE; x++) {
+                for (let y = -RANGE; y <= RANGE; y++) {
+                    // check if a block exists and if it's a chest
+                    const block = game.world.getBlock(player.x + x, player.y + y);
+                    if (!block || block.type !== 'chest') continue;
+
+                    // check if chest is outside opening range
+                    const dist = Math.distTo(0, 0, x, y);
+                    if (dist > RANGE) continue;
+
+                    if (!block.inventory) console.log(`chest: ${block} does not have an inventory`);
+                    this.openInventory(block.inventory);
+                }
+            }
         }
     }
 

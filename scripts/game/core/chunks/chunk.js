@@ -25,9 +25,9 @@ class Chunk {
 
     getBlock(lx, ly) {
         if (lx < 0 || lx > this.SIZE || ly < 0 || ly > this.SIZE)
-            console.log('Chunk.getBlock() coordinates must local to the chunk.');
+            console.log(`Chunk.getBlock() coordinates must local to the chunk: (${lx}, ${ly})`);
 
-        const index = this.getBlockIndex(x, y);
+        const index = this.getBlockIndex(lx, ly);
         return this.blocks[index];
     }
 
@@ -57,25 +57,27 @@ class Chunk {
     getBlockColor(block) {
         switch (block.type) {
             case 'deep water':
-                return 'rgb(0,50,255)'
+                return 'rgb(0,50,255)';
             case 'water':
-                return 'rgb(0,100,255)'
+                return 'rgb(0,100,255)';
             case 'sand':
-                return 'rgb(225, 185, 100)'
+                return 'rgb(225, 185, 100)';
             case 'dry grass':
-                return 'rgb(96, 153, 43)'
+                return 'rgb(96, 153, 43)';
             case 'grass':
-                return 'rgb(21, 117, 34)'
+                return 'rgb(21, 117, 34)';
             case 'dead grass':
-                return 'rgb(46, 82, 25)'
+                return 'rgb(46, 82, 25)';
             case 'dirt':
-                return 'rgb(94, 74, 20)'
+                return 'rgb(94, 74, 20)';
             case 'gravel':
-                return 'rgb(129, 109, 96)'
+                return 'rgb(129, 109, 96)';
             case 'stone':
-                return 'rgb(150, 150, 150)'
+                return 'rgb(150, 150, 150)';
             case 'snow':
-                return 'rgb(225, 225, 225)'
+                return 'rgb(225, 225, 225)';
+            case 'chest':
+                return 'rgb(58, 28, 2)';
             default:
                 return 'rgb(255,0,255)';
         }

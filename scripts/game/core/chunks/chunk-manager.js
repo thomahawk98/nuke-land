@@ -19,6 +19,17 @@ class ChunkManager {
         }
     }
 
+    getBlock(wx, wy) {
+        const chunkCors = this.getChunkCors(wx, wy);
+        const chunk = this.getChunk(chunkCors.x, chunkCors.y);
+        if(!chunk) return false; // no chunk at block location
+
+        const lx = Math.modulo(wx, this.CHUNK_SIZE);
+        const ly = Math.modulo(wy, this.CHUNK_SIZE);
+        const block = chunk.getBlock(lx, ly);
+        return block;
+    }
+
     getChunk(cx, cy) {
         const key = this.getChunkKey(cx, cy);
         return this.chunks.get(key);

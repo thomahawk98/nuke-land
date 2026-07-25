@@ -30,6 +30,12 @@ class World {
         return false;
     }
 
+    getBlock(x, y) {
+        x = Math.floor(x);
+        y = Math.floor(y);
+        return this.chunkManager.getBlock(x, y);
+    }
+
     draw() {
         this.chunkManager.draw();
         this.env.draw();
