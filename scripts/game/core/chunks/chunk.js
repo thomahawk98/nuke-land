@@ -32,6 +32,14 @@ class Chunk {
         const x = block.x, y = block.y;
         if (x == undefined || y == undefined) return console.log('block pos not defined');
 
+        if (block.type == 'chest' && !block.inventory) {
+            const CHEST_SIZE = 3;
+            block.inventory = new Inventory(block, CHEST_SIZE, CHEST_SIZE);
+
+            const chestContents = generateChestContents(CHEST_SIZE * CHEST_SIZE, 'test chest');
+            block.inventory.items = chestContents;
+        }
+
         const index = this.getBlockIndex(x, y);
         this.blocks[index] = block;
     }

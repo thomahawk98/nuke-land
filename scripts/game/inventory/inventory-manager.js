@@ -103,7 +103,7 @@ class InventoryManager {
                     // check if chest is outside opening range
                     const dist = Math.distTo(0, 0, x, y);
                     if (dist > RANGE) continue;
-
+                    
                     if (!block.inventory) console.log(`chest: ${block} does not have an inventory`);
                     this.openInventory(block.inventory);
                 }

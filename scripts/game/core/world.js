@@ -96,6 +96,19 @@ class World {
         return this.chunkManager.setBlock(x, y, block);
     }
 
+    getBlocksInRectangle(_x, _y, w, h) {
+        const x1 = Math.floor(_x), y1 = Math.floor(_y);
+        const x2 = Math.floor(_x + w), y2 = Math.floor(_y + h);
+        const blocks = [];
+        for (let x = x1; x <= x2; x++) {
+            for (let y = y1; y <= y2; y++) {
+                const block = this.getBlock(x, y);
+                blocks.push(block);
+            }
+        }
+        return blocks;
+    }
+
     draw() {
         this.chunkManager.draw();
         this.structureManager.draw();

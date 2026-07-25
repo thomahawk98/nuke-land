@@ -68,9 +68,35 @@ class Entity {
 
         this.move.x *= damping.x;
         this.move.y *= damping.y;
+        if (this.normalCollisionsDisabled) {
+            this.x += this.move.x;
+            this.y += this.move.y;
+        } else {
+            const xCollision = this.checkIfCollidingWithVoxel((this.x + this.move.x), this.y);
+            const yCollision = this.checkIfCollidingWithVoxel(this.x, (this.y + this.move.y));
 
-        this.x += this.move.x;
-        this.y += this.move.y;
+            const friction = 0.1;
+            const restitution = 1;
+            if (xCollision) {
+                this.move.x = -this.move.x * restitution;
+                this.move.y = this.move.y * (1 - friction);
+            } else this.x += this.move.x;
+
+            if (yCollision) {
+                this.move.y = -this.move.y * restitution;
+                this.move.x = this.move.x * (1 - friction);
+            } else this.y += this.move.y;
+        }
+    }
+
+    checkIfCollidingWithVoxel(x = this.x, y = this.y) {
+        const w = 0.9, h = 0.9;
+        const bounds = [x - w * 0.5, y - h * 0.5, w, h];
+        const blocks = game.world.getBlocksInRectangle(...bounds);
+        for (const block of blocks) {
+            if (block.solid) return true;
+        }
+        return false;
     }
 
     drawHealthbar(x = 0, y = -0.75, size = 1) {
