@@ -45,6 +45,10 @@ class Zombie extends Entity {
 
         const dist = Math.distTo(this.x, this.y, player.x, player.y);
         if (dist > this.detectionRange) return false;
+        
+        const dir = Math.dirTo(this.x, this.y, player.x, player.y);
+        const lineOfSightBlocked = raycast(this.x, this.y, dir, dist);
+        if(lineOfSightBlocked) return false;
 
         this.targetPosition.x = player.x;
         this.targetPosition.y = player.y;

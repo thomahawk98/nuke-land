@@ -29,7 +29,7 @@ class World {
     }
 
     getSolidityAt(x, y) {
-        return false;
+        return this.getBlock(x, y).solid;
     }
 
     getBlock(x, y) {

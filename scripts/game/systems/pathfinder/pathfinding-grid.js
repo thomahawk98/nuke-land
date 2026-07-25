@@ -7,7 +7,7 @@ class PathfindingGrid {
         this.pathEndNodes = new Set();
 
         // visual stuff
-        this.enabled = false;
+        this.enabled = true;
         this.opacity = 0;
         this.maxOpacity = 50;
     }
