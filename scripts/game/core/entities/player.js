@@ -4,20 +4,17 @@ class Player extends Entity {
         this.user = user;
         this.type = 'player';
 
-        this.inventory = new Inventory(this);
+        this.inventory = new Inventory(this, 4, 3);
 
         // add random items to player inventory (remove later)
         for (let n = 0; n < this.inventory.width * this.inventory.height; n++) {
             if (Math.random() < 0.5) {
-                const item = new Item(true, {
-                    type: 'test item',
-                    color: `hsl(${Math.random() * 360}, 100%, 50%)`
-                });
+                const count = Math.ceil(Math.random() * 5);
+                const item = new Item('test item', { slot: n }, count);
                 this.inventory.items[n] = item;
             }
         }
-
-        user.interface.inventoryManager.openInventories.push(this.inventory);
+        this.inventory.items[0] = new Item('machete', { slot: 0 });
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
@@ -32,16 +29,62 @@ class Player extends Entity {
     }
 
     update() {
-        this.respondToControls();
         this.updateAcceleration();
         this.updateMotion();
     }
 
-    respondToControls() {
+    updateControls() { // called by user updateControls() function
         if (this.user.keys.down['w']) this.accelTarget.y--;
         if (this.user.keys.down['a']) this.accelTarget.x--;
         if (this.user.keys.down['s']) this.accelTarget.y++;
         if (this.user.keys.down['d']) this.accelTarget.x++;
+
+        // switch inventory slots
+        for (let n = 0; n < this.inventory.width; n++) {
+            if (this.user.keys.down[n + 1]) {
+                this.inventory.selectedSlotIndex = n;
+            }
+        }
+
+        if (this.user.mouse.left.click) {
+            this.attackWithItem();
+        }
+
+        if (this.user.mouse.right.click) {
+            this.useItem();
+        }
+    }
+
+    attackWithItem() {
+        const item = this.inventory.getSelectedItem();
+        if (item.type == 'gun') {
+            item.fire();
+        } else {
+            this.performMeleAttack(item);
+        }
+    }
+
+    performMeleAttack(item) {
+        if (!item) item = {};
+        item.type ??= 'fists';
+        item.damage ??= 10;
+        item.range ??= 2;
+        item.knockback ??= 0.25;
+
+        const enemies = this.getEnemiesInMeleAttackRange(item);
+        for (const enemy of enemies) {
+            enemy.health -= item.damage;
+
+            const angle = Math.dirTo(this.x, this.y, enemy.x, enemy.y);
+            const knockback = Math.distToMove(item.knockback, angle);
+            enemy.move.x += knockback.x;
+            enemy.move.y += knockback.y;
+        }
+    }
+
+    getEnemiesInMeleAttackRange(item) {
+        return game.world.env.objects
+            .filter(a => a !== this && Math.distTo(this.x, this.y, a.x, a.y) < item.range);
     }
 
     draw() {

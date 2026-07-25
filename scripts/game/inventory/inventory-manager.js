@@ -1,46 +1,126 @@
 class InventoryManager {
     constructor() {
-        this.openInventories = [];
+        this.displayedInventories = [];
+        this.itemHeldByMouse = false;
     }
 
     update() {
-        for (const inventory of this.openInventories) {
+        for (const inventory of this.displayedInventories) {
             inventory.update();
         }
 
         // filter out inventories that arent open and animation is 0
-        this.openInventories = this.openInventories.filter(a => a.open || a.animation > 0);
+        this.displayedInventories = this.displayedInventories
+            .filter(a => a.open || a.animation > 0);
+    }
+
+    updateControls() { // called by user updateControls() function
+        const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
+        if (mouseIndexes === false) return; // SKIBIDI change this later
+
+        // get item under mouse
+        const [mouseInventoryIndex, mouseSlotIndex] = mouseIndexes;
+        const itemUnderMouse = this.displayedInventories[mouseInventoryIndex].items[mouseSlotIndex];
+
+        const player = game.getPlayer();
+        if (!player) return;
+
+        // move items around with keys
+        for (let n = 0; n < player.inventory.width; n++) {
+            const key = n + 1;
+            if (user.keys.up[key]) {
+                this.displayedInventories[mouseInventoryIndex].items[mouseSlotIndex] = player.inventory.items[n];
+                player.inventory.items[n] = itemUnderMouse;
+            }
+        }
+
+        if (user.mouse.left.click) {
+            this.displayedInventories[mouseInventoryIndex].items[mouseSlotIndex] = this.itemHeldByMouse;
+            this.itemHeldByMouse = itemUnderMouse;
+        }
+    }
+
+    getMouseInventoryAndSlotIndexes() {
+        for (let n = 0; n < this.displayedInventories.length; n++) {
+            const inventory = this.displayedInventories[n];
+
+            const lx = user.mouse.x - inventory.x;
+            const ly = user.mouse.y - inventory.y;
+
+            const index = inventory.getIndexFromLocalCors(lx, ly);
+            if (index === false) continue; // mouse is not inside this inventory
+
+            return [n, index];
+        }
+        return false;
     }
 
     toggle() {
-        if (this.openInventories.length == 0) {
+        const openInventoryCount = this.getOpenInventoryCount();
+        if (openInventoryCount > 0) {
+            this.closeAllInventories();
+        } else {
             const player = game.getPlayer();
             if (!player) return;
 
             this.openInventory(player.inventory);
-        } else {
-            for (const inventory of this.openInventories) {
-                this.closeInventory(inventory);
-            }
         }
+    }
+
+    getOpenInventoryCount() {
+        let count = 0;
+        for (const inventory of this.displayedInventories) {
+            if (inventory.open) count++;
+        }
+        return count;
+    }
+
+    closeAllInventories() {
+        for (const inventory of this.displayedInventories) {
+            this.closeInventory(inventory);
+        }
+    }
+
+    closeInventory(inventory) {
+        inventory.open = false;
     }
 
     openInventory(inventory) {
         if (!inventory) return;
 
         inventory.open = true;
-        inventory.animation = 0;
-        this.openInventories.push(inventory);
-    }
-
-    closeInventory(inventory) {
-        inventory.open = false;
-        inventory.animation = 1;
+        if (!this.displayedInventories.includes(inventory)) this.displayedInventories.push(inventory);
     }
 
     draw() {
-        for (const inventory of this.openInventories) {
+        for (const inventory of this.displayedInventories) {
             inventory.draw();
         }
+
+        if (this.itemHeldByMouse) {
+            const item = this.itemHeldByMouse;
+            ctx.save();
+            ctx.translate(user.mouse.x, user.mouse.y);
+            ctx.scale(1.1, 1.1);
+
+            item.draw();
+
+            ctx.restore();
+        }
+
+        // test mouse index function
+
+        /*
+        const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
+        if(!mouseIndexes) return;
+
+        const inventory = this.displayedInventories[mouseIndexes[0]];
+        const localCors = inventory.getLocalSlotCors(mouseIndexes[1]);
+        const x = inventory.x + localCors.x - inventory.size * 0.5;
+        const y = inventory.y + localCors.y - inventory.size * 0.5;
+
+        ctx.fillStyle = 'rgb(255,0,0)';
+        ctx.fillRect(x, y, inventory.size, inventory.size);
+        */
     }
 }
