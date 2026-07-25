@@ -25,6 +25,8 @@ class Entity {
         this.angleOfAttack = 75; // only matters for the player
 
         this.invincibility = 0;
+
+        this.radius = 0.5;
     }
 
     update() {
@@ -76,7 +78,7 @@ class Entity {
             const yCollision = this.checkIfCollidingWithVoxel(this.x, (this.y + this.move.y));
 
             const friction = 0.1;
-            const restitution = 1;
+            const restitution = 0.5;
             if (xCollision) {
                 this.move.x = -this.move.x * restitution;
                 this.move.y = this.move.y * (1 - friction);

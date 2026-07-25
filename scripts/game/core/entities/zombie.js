@@ -36,7 +36,7 @@ class Zombie extends Entity {
 
         // update to use item if zombies can hold items
         const enemiesInRange = this.getEnemiesInMeleAttackRange();
-        if (enemiesInRange.length !== 0) this.performMeleAttack();
+        //if (enemiesInRange.length !== 0) this.performMeleAttack();
     }
 
     updateTargetToPlayer() {
