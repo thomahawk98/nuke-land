@@ -1,4 +1,4 @@
-function raycast(x, y, angle, maxDistance = 100, returnAll = false) {
+function raycast(x, y, angle, maxDistance = 100, returnAll = false, countGlassAsSolid = false) {
     const allBlocks = [];
 
     const rads = (angle - 90) * Math.PI / 180;
@@ -23,7 +23,7 @@ function raycast(x, y, angle, maxDistance = 100, returnAll = false) {
         const block = game.world.getBlock(cellX, cellY);
         if (returnAll) allBlocks.push(block);
 
-        const blockIsSolid = block && block.solid && block.type !== 'glass';
+        const blockIsSolid = block && block.solid && (block.type !== 'glass' || countGlassAsSolid);
         if (blockIsSolid) {
             if (returnAll) return allBlocks;
             else return block; // return the first solid block that was hit

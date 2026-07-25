@@ -39,12 +39,13 @@ class StructureManager {
 
         // add the structure
         const structure = new House(cors.x, cors.y);
-        
+
         this.structures.push(structure);
         return structure;
     }
 
     draw() {
+        if (!game.debug) return false;
         for (const structure of this.structures) {
             ctx.fillStyle = 'red';
             ctx.fillCirc(structure.x, structure.y, 0.5);

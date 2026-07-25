@@ -1,8 +1,13 @@
 class World {
     constructor() {
         this.daylight = 0.5;
-        this.DAY_LENGTH_SECONDS = 3;
-        this.NIGHT_LENGTH_SECONDS = 1;
+        this.DAY_LENGTH_FRAMES = 3 * 100; // 3 minutes
+        this.NIGHT_LENGTH_FRAMES = 1 * 100; // 1 minute
+        this.CYCLE_LENGTH = this.DAY_LENGTH_FRAMES + this.NIGHT_LENGTH_FRAMES;
+
+        this.MAX_DAYLIGHT = 1.0;
+        this.MIN_DAYLIGHT = 0.5;
+        this.transition = Math.min(this.DAY_LENGTH_FRAMES, this.NIGHT_LENGTH_FRAMES) * 0.25;
 
         this.seed = Math.round(Math.random() * 10000);
         this.chunkManager = new ChunkManager(this.seed);
@@ -20,48 +25,49 @@ class World {
     }
 
     updateDaylight() {
-        const dayLength = this.DAY_LENGTH_SECONDS * 100;
-        const nightLength = this.NIGHT_LENGTH_SECONDS * 100;
-        const minDaylight = 0.5;
-        const maxDaylight = 1.0;
-        const light = this.getDaylight(game.t, dayLength, nightLength, minDaylight, maxDaylight);
+        const light = this.getDaylight(game.t);
         this.daylight = light;
     }
 
-    getDaylight(time, dayLength, nightLength, minDaylight, maxDaylight) {
-        const transition = Math.min(dayLength, nightLength) * 0.25;
+    getCyclePercent(time = game.t) {
+        return (time / this.CYCLE_LENGTH) % 1;
+    }
 
-        const cycleLength = dayLength + nightLength;
-        const t = ((time % cycleLength) + cycleLength) % cycleLength;
+    getTimeOfDay(time = game.t) {
+        const t = Math.modulo(time, this.CYCLE_LENGTH);
+
+        if (t < this.transition) return 'sunrise';
+        else if (t < this.DAY_LENGTH_FRAMES - this.transition) return 'day';
+        else if (t < this.DAY_LENGTH_FRAMES) return 'sunset';
+        else return 'night';
+    }
+
+    getDaylight(time = game.t) {
+        const minDaylight = this.MIN_DAYLIGHT;
+        const maxDaylight = this.MAX_DAYLIGHT;
+        const t = Math.modulo(time, this.CYCLE_LENGTH);
 
         // Smooth interpolation
         const smooth = x => x * x * (3 - 2 * x);
-
-        // Sunrise
-        if (t < transition) {
-            return Math.lerp(
-                minDaylight,
-                maxDaylight,
-                smooth(t / transition)
-            );
+        const timeOfDay = this.getTimeOfDay(time);
+        switch (timeOfDay) {
+            case 'sunrise':
+                return Math.lerp(
+                    minDaylight,
+                    maxDaylight,
+                    smooth(t / this.transition)
+                );
+            case 'day':
+                return maxDaylight;
+            case 'sunset':
+                return Math.lerp(
+                    maxDaylight,
+                    minDaylight,
+                    smooth((t - (this.DAY_LENGTH_FRAMES - this.transition)) / this.transition)
+                );
+            case 'night':
+                return minDaylight;
         }
-
-        // Day
-        if (t < dayLength - transition) {
-            return maxDaylight;
-        }
-
-        // Sunset
-        if (t < dayLength) {
-            return Math.lerp(
-                maxDaylight,
-                minDaylight,
-                smooth((t - (dayLength - transition)) / transition)
-            );
-        }
-
-        // Night
-        return minDaylight;
     }
 
     reset() {

@@ -74,7 +74,8 @@ class Entity {
     }
 
     drawHealthbar(x = 0, y = -0.75, size = 1) {
-        if(this.invincibility % 25 > 12.5) return;
+        if (this.health == this.maxHealth) return;
+        if (this.invincibility % 25 > 12.5) return;
 
         const percent = Math.clamp01(this.health / this.maxHealth);
         ctx.save();
@@ -131,7 +132,13 @@ class Entity {
                 Math.distTo(this.x, this.y, a.x, a.y) < range &&
                 this.isEnemy(a) &&
                 a.invincibility == 0
-            );
+            )
+            .filter(a => {
+                const dist = Math.distTo(this.x, this.y, a.x, a.y);
+                const dir = Math.dirTo(this.x, this.y, a.x, a.y);
+                const lineOfSightBlocked = raycast(this.x, this.y, dir, dist, false, true);
+                return !lineOfSightBlocked;
+            });
     }
 
     isEnemy(o) {
@@ -139,7 +146,7 @@ class Entity {
     }
 
     takeDamage(amount) {
-        if(this.invincibility > 0) return; // can't be damaged
+        if (this.invincibility > 0) return; // can't be damaged
         this.health -= amount;
         this.invincibility = 100; // 0.5s of invincibility after taking damage
     }

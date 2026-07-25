@@ -2,7 +2,7 @@ class Game {
     constructor() {
         this.t = 0;
         this.world = new World();
-        this.debug = true;
+        this.debug = false;
     }
 
     tick() {

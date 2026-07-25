@@ -109,7 +109,13 @@ class Player extends Entity {
 
                 // yay!
                 return true;
-            });
+            })
+            .filter(a => {
+                const dist = Math.distTo(this.x, this.y, a.x, a.y);
+                const dir = Math.dirTo(this.x, this.y, a.x, a.y);
+                const lineOfSightBlocked = raycast(this.x, this.y, dir, dist, false, true);
+                return !lineOfSightBlocked;
+            });;
     }
 
     updateLineOfSight() {
@@ -121,7 +127,7 @@ class Player extends Entity {
             const blocks = raycast(Math.round(this.x), Math.round(this.y), angle, distance, true);
             for (let n = 0; n < blocks.length; n++) {
                 const block = blocks[n];
-                if(!block) continue;
+                if (!block) continue;
                 const light = Math.pow(lightStrength, n);
                 block.light += light;
             }
