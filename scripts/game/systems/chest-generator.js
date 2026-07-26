@@ -36,13 +36,13 @@ function getRandomOptionsFromLootPool(lootPool) {
             ];
         case 'weapons chest':
             return [
-                { type: 'ammo', subtype: 'pistol', maxCount: 12, weight: 5 },
+                { type: 'ammo', subtype: 'pistol', maxCount: 12, weight: 3 },
                 { type: 'ammo', subtype: 'shotgun', maxCount: 8, weight: 3 },
-                { type: 'bat', maxCount: 1, weight: 5 },
+                { type: 'bat', maxCount: 1, weight: 3 },
                 { type: 'machete', maxCount: 1, weight: 2 },
                 { type: 'axe', maxCount: 1, weight: 1 },
                 { type: 'pistol', maxCount: 1, weight: 1 },
-                { type: 'shotgun', maxCount: 1, weight: 0.5 },
+                { type: 'shotgun', maxCount: 1, weight: 1 },
             ];
         case 'food chest':
             return [

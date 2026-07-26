@@ -70,11 +70,11 @@ class Player extends Entity {
             const RANGE = 3;
             for (let x = -RANGE; x <= RANGE; x++) {
                 for (let y = -RANGE; y <= RANGE; y++) {
-                    // check if a block exists and if it's a chest
+                    // check if a block exists and if it's a door
                     const block = game.world.getBlock(this.x + x, this.y + y);
                     if (!block || block.type !== 'door') continue;
 
-                    // check if chest is outside opening range
+                    // check if door is outside opening range
                     const dist = Math.distTo(0, 0, x, y);
                     if (dist > RANGE) continue;
 

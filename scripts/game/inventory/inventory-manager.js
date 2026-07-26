@@ -71,7 +71,7 @@ class InventoryManager {
         // swap locations
         const item = this.itemHeldByMouse;
         const itemUnderMouse = this.getItemUnderMouse();
-        if(itemUnderMouse == null) return false;
+        if (itemUnderMouse == null) return false;
 
         const combined = this.tryCombining(itemUnderMouse, item);
         if (!combined) {
@@ -129,6 +129,10 @@ class InventoryManager {
                     // check if chest is outside opening range
                     const dist = Math.distTo(0, 0, x, y);
                     if (dist > RANGE) continue;
+
+                    const dir = Math.dirTo(0, 0, x, y);
+                    const lineOfSightBlocked = raycast(player.x, player.y, dir, dist, false, true);
+                    if (lineOfSightBlocked && lineOfSightBlocked !== block) continue;
 
                     if (!block.inventory) console.log(`chest: ${block} does not have an inventory`);
                     this.openInventory(block.inventory);
