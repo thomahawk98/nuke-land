@@ -65,8 +65,6 @@ class Inventory {
             this.drawItem(n, selected);
 
             ctx.restore();
-
-            if(selected) this.drawItemDescription(this.items[n]);
         }
 
         ctx.globalAlpha = 1;
@@ -90,23 +88,6 @@ class Inventory {
         if (selected) ctx.scale(1.1, 1.1);
 
         item.draw();
-
-        ctx.restore();
-    }
-
-    drawItemDescription(item) {
-        if(!item) return;
-
-        const x = user.mouse.x - this.x, y = user.mouse.y - this.y;
-        ctx.save();
-        ctx.translate(x, y);
-        
-        ctx.fillStyle = 'black';
-        ctx.fillRect(-50, -20, 100, 40);
-        
-        ctx.f(20);
-        ctx.fillStyle = 'white';
-        ctx.fillText(item.type.charAt(0).toUpperCase() + item.type.slice(1), 0, 0);
 
         ctx.restore();
     }

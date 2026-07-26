@@ -12,6 +12,7 @@ class Interface {
         this.inventoryManager.draw();
         this.drawPlayerHotbar();
         if (game.page == 'game') this.drawTimer();
+        this.drawHint();
     }
 
     drawPlayerHotbar() {
@@ -84,5 +85,50 @@ class Interface {
         ctx.fillStyle = nightTime ? 'red' : 'white';
         ctx.f(50);
         ctx.fillText(text, 20, 20);
+    }
+
+    drawHint() {
+        const player = game.getPlayer();
+        if (!player) return;
+
+        const screen = this.user.cam.worldToScreen(player.x, player.y);
+
+        const hint = this.getHint(player);
+        if (!hint) return;
+
+        ctx.save();
+        ctx.translate(screen.x, screen.y);
+
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = 'bold 20px Arial'
+        ctx.fillText(hint, 0, 35);
+
+        ctx.restore();
+    }
+
+    getHint(player) {
+        // check player vacinity for doors or chests
+        const hasChest = this.checkPlayerVacinityFor(player, 'chest');
+        if (hasChest && this.inventoryManager.getOpenInventoryCount() == 0) return `press 'E' to open chest`;
+
+        const hasDoor = this.checkPlayerVacinityFor(player, 'door');
+        if (hasDoor) return `press 'SPACE' to toggle door`;
+
+        return false;
+    }
+
+    checkPlayerVacinityFor(player, type) {
+        const RANGE = 3;
+        for (let x = -RANGE; x <= RANGE; x++) {
+            for (let y = -RANGE; y <= RANGE; y++) {
+                // check if a block exists and if it's a chest
+                const block = game.world.getBlock(player.x + x, player.y + y);
+                if (!block || block.type !== type) continue;
+
+                return true;
+            }
+        }
     }
 }

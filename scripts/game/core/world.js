@@ -33,7 +33,6 @@ class World {
     }
 
     getTimeOfDay(time = game.t) {
-        return 'night'
         const t = Math.modulo(time, this.CYCLE_LENGTH);
 
         if (t < this.transition) return 'sunrise';
@@ -74,7 +73,7 @@ class World {
         const objects = [];
         objects.push(new Player(user, 0, 0));
 
-        const amount = 100;
+        const amount = 0;
         for (let n = 0; n < amount; n++) {
             const angle = 360 / amount * n;
             const { x, y } = Math.distToMove(25, angle);

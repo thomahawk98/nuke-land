@@ -4,10 +4,56 @@ class Environment {
     }
 
     update() {
+        this.handleEnemySpawning();
         this.updateObjects();
         this.resolveEntityCollisions();
         this.objects = this.objects.filter(a => !a.delete);
     };
+
+    handleEnemySpawning() {
+        const player = game.getPlayer();
+        if (!player) return;
+
+        const timeOfDay = game.world.getTimeOfDay();
+        const maxAmount = timeOfDay == 'night' ? 100 : 10;
+        const enemies = this.objects.filter(a => a.type == 'zombie');
+        if (enemies.length < maxAmount) this.spawnNewEnemy(player);
+        else if (enemies.length >= maxAmount) this.deleteFurthestEnemy(player, enemies);
+    }
+
+    spawnNewEnemy(player) {
+        const dist = 35 + Math.random() * 15;
+        const dir = Math.random() * 360;
+        const cors = Math.distToMove(dist, dir);
+        const x = player.x + cors.x, y = player.y + cors.y;
+        const block = game.world.getBlock(x, y);
+        if (block.solid) return false;
+
+        const enemy = new Zombie(x, y);
+        this.objects.push(enemy);
+    }
+
+    deleteFurthestEnemy(player, enemies) {
+        let furthest = null;
+        let furthestDist = 0;
+        for (const enemy of enemies) {
+            const visible = user.cam.checkVisibilityOfRect(enemy.x, enemy.y);
+            if (visible) {
+                const dist = Math.distTo(player.x, player.y, enemy.x, enemy.y);
+                const dir = Math.dirTo(player.x, player.y, enemy.x, enemy.y);
+                const lineOfSightBlocked = raycast(player.x, player.y, dir, dist);
+                if (lineOfSightBlocked) continue;
+            }
+
+            const dist = Math.distTo(player.x, player.y, enemy.x, enemy.y);
+            if (dist > furthestDist) {
+                furthest = enemy;
+                furthestDist = dist;
+            }
+        }
+        if (!furthest) return;
+        furthest.delete = true;
+    }
 
     updateObjects() {
         for (var o of this.objects) {
@@ -18,7 +64,10 @@ class Environment {
             }
 
             const inRenderDistance = game.getPlayer().isObjectInRenderDistance(o);
-            if (!inRenderDistance) continue;
+            if (!inRenderDistance) {
+                o.delete = true;
+                continue;
+            }
 
             // update object
             o.update();
@@ -96,7 +145,7 @@ class Environment {
             o.draw();
 
             ctx.restore();
-            
+
             o.drawHealthbar();
 
             ctx.restore();

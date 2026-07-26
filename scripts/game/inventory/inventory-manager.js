@@ -152,19 +152,29 @@ class InventoryManager {
             ctx.restore();
         }
 
-        // test mouse index function
+        this.drawHoveredItemDescription();
+    }
 
-        /*
+    drawHoveredItemDescription() {
         const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
-        if(!mouseIndexes) return;
-
         const inventory = this.displayedInventories[mouseIndexes[0]];
-        const localCors = inventory.getLocalSlotCors(mouseIndexes[1]);
-        const x = inventory.x + localCors.x - inventory.size * 0.5;
-        const y = inventory.y + localCors.y - inventory.size * 0.5;
+        if(!inventory) return;
 
-        ctx.fillStyle = 'rgb(255,0,0)';
-        ctx.fillRect(x, y, inventory.size, inventory.size);
-        */
+        const item = inventory.items[mouseIndexes[1]];
+        if(!item) return;
+
+        ctx.save();
+        ctx.translate(user.mouse.x, user.mouse.y);
+        
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, 100, 40);
+        
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.f(20);
+        ctx.fillStyle = 'white';
+        ctx.fillText(item.type.charAt(0).toUpperCase() + item.type.slice(1), 50, 20);
+
+        ctx.restore();
     }
 }
