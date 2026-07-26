@@ -9,7 +9,7 @@ const editor = new StructureEditor();
 //user.cam.locked = false;
 
 // set up the project
-const title = "Nuke Land";
+const title = "Night Cycle";
 const dimensions = {
     width: 1000,
     height: 1000

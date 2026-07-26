@@ -25,9 +25,9 @@ class Camera {
 
     followLockedObject() {
         const player = game.getPlayer();
-        if (!this.player) return;
-        
-        this.lockedObject = player
+        if (!player) return;
+
+        this.lockedObject = player;
         this.target.x = this.lockedObject.x;
         this.target.y = this.lockedObject.y;
     }

@@ -1,7 +1,7 @@
 class Game {
     constructor() {
         this.t = 0;
-        this.page = 'audio test';
+        this.page = 'audio check';
         this.world = new World();
         this.menu = new Menu();
         this.music = new Music();
@@ -15,7 +15,7 @@ class Game {
     };
 
     update() {
-        if (this.page == 'audio test') this.audioTestPage.update();
+        if (this.page == 'audio check') this.audioCheckPage.update();
         else if (this.page == 'menu') this.menu.update();
         else if (this.page == 'game') {
             if (!this.initialized) {
@@ -25,7 +25,7 @@ class Game {
             this.world.update();
         }
 
-        if (this.page !== 'audio test') this.music.update();
+        if (this.page !== 'audio check') this.music.update();
     };
 
     reset() {
@@ -33,7 +33,7 @@ class Game {
     }
 
     draw() {
-        if (this.page == 'audio test') this.audioTestPage.draw();
+        if (this.page == 'audio check') this.audioCheckPage.draw();
         else if (this.page == 'menu') this.menu.draw();
         else if (this.page == 'game') {
             ctx.save();
@@ -45,7 +45,7 @@ class Game {
         }
     };
 
-    audioTestPage = {
+    audioCheckPage = {
         draw: function () {
             const size = 70 + Math.sin(game.t * 0.02) * 3;
             ctx.f(size);
