@@ -20,6 +20,7 @@ function generateChestContents(amount, lootPool = 'test chest') {
 
         // set item
         const item = new Item(type, { slot: n }, count);
+        if (option.subtype) item.subtype = option.subtype;
         contents[n] = item;
     }
 
@@ -34,6 +35,8 @@ function getRandomOptionsFromLootPool(lootPool) {
             ];
         case 'weapons chest':
             return [
+                { type: 'ammo', subtype: 'pistol', maxCount: 12, weight: 5 },
+                { type: 'ammo', subtype: 'shotgun', maxCount: 8, weight: 3 },
                 { type: 'bat', maxCount: 1, weight: 5 },
                 { type: 'machete', maxCount: 1, weight: 2 },
                 { type: 'axe', maxCount: 1, weight: 1 },

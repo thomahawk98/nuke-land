@@ -88,6 +88,8 @@ class Inventory {
         if (selected) ctx.scale(1.1, 1.1);
 
         item.draw();
+        if (item.count !== 1) item.drawCount();
+        if (item.type == 'shotgun' || item.type == 'pistol')  item.drawAmmoCount();
 
         ctx.restore();
     }

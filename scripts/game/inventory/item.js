@@ -96,8 +96,8 @@ class Item {
                     numberOfBullets: 6,
                     maxRangedReload: 100,
                     range: 7,
-                    ammo: 12,
-                    maxAmmo: 12
+                    ammo: 8,
+                    maxAmmo: 8
                 };
             default: return {}
         }
@@ -123,12 +123,6 @@ class Item {
         } else {
             ctx.fillStyle = this.color ? this.color : 'red';
             ctx.fillRect(-25, -25, 50, 50);
-        }
-
-        if (this.count !== 1) this.drawCount();
-
-        if(this.type == 'shotgun' || this.type == 'pistol') {
-            this.drawAmmoCount();
         }
     }
 

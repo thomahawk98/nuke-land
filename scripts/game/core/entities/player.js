@@ -180,5 +180,51 @@ class Player extends Entity {
         ctx.drawImage(images.get('Player.png'), -0.5, -0.5, 1, 1);
 
         ctx.restore();
+
+        this.drawItem();
+    }
+
+    drawItem() {
+        const item = this.inventory.getSelectedItem();
+        if (!item) return;
+
+        const HAND_OFFSET = {
+            x: 0.35, y: -0.45
+        }
+
+        ctx.save();
+        ctx.rotate(this.getItemAngleOffset(item) * Math.PI / 180);
+        ctx.translate(0, -0.5); // grip point
+        ctx.rotate(this.getReloadAngleOffset(item) * Math.PI / 180);
+        ctx.translate(HAND_OFFSET.x, HAND_OFFSET.y); // player hand position
+        ctx.scale(0.02, 0.02);
+
+        item.draw();
+
+        ctx.restore();
+    }
+
+    getReloadAngleOffset(item) {
+        const itemReload = !item ? this.maxMeleReload :
+            item.type == 'shotgun' || item.type == 'pistol' ? item.maxRangedReload : item.maxMeleReload;
+        const percent = this.reload / itemReload;
+
+        return percent * 90;
+    }
+
+    getItemAngleOffset(item) {
+        switch (item.type) {
+            case 'axe':
+            case 'machete':
+            case 'bat':
+                return -45;
+
+            case 'pistol':
+            case 'shotgun':
+                return -45;
+
+            default:
+                return 0;
+        }
     }
 }
