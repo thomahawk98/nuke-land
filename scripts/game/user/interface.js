@@ -11,6 +11,7 @@ class Interface {
     draw() {
         this.inventoryManager.draw();
         this.drawPlayerHotbar();
+        if (game.page == 'game') this.drawTimer();
     }
 
     drawPlayerHotbar() {
@@ -61,5 +62,27 @@ class Interface {
         ctx.fill();
 
         ctx.restore();
+    }
+
+    // Yay this works
+    drawTimer() {
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(0, 0, 220, 80);
+        const time = game.t % game.world.CYCLE_LENGTH;
+        const nightTime = (time > game.world.DAY_LENGTH_FRAMES)
+        const countDown = nightTime
+            ? game.world.NIGHT_LENGTH_FRAMES - (time - game.world.DAY_LENGTH_FRAMES)
+            : game.world.DAY_LENGTH_FRAMES - time;
+
+        const minutes = Math.floor(countDown / (60 * 100));
+        const seconds = Math.floor((countDown / 100) % 60).toString().padStart(2, '0');
+        const milliseconds = Math.floor(countDown % 100).toString().padStart(2, '0');
+        const text = `${minutes}:${seconds}:${milliseconds}`;
+
+        ctx.textBaseline = 'top';
+        ctx.textAlign = 'left';
+        ctx.fillStyle = nightTime ? 'red' : 'white';
+        ctx.f(50);
+        ctx.fillText(text, 20, 20);
     }
 }

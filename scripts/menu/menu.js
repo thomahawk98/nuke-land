@@ -35,6 +35,8 @@ class Menu {
 
         const title = document.title.toUpperCase();
         ctx.fillStyle = 'white';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
         ctx.f(100);
         ctx.fillText(title, 0, 0);
 

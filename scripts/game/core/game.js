@@ -9,7 +9,7 @@ class Game {
     }
 
     tick() {
-        this.t++;
+        this.t += 1.5;
         this.update();
         this.draw();
     };
