@@ -35,7 +35,7 @@ class Menu {
         for (const o of this.imgSrcs) {
             ctx.save();
             ctx.translate(o.x, o.y);
-            ctx.rotate(o.angle * Math.PI / 180);
+            ctx.rotate((o.angle + Math.sin(game.t * 0.02) * 4) * Math.PI / 180);
             ctx.scale(100, 100);
 
             ctx.drawImage(images.get(o.src), -0.5, -0.5, 1, 1);
