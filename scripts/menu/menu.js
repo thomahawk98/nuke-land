@@ -1,6 +1,17 @@
 class Menu {
     constructor() {
         this.buttons = [];
+        this.imgSrcs = [
+            { src: 'Player.png', x: 150, y: 400, angle: 45 },
+            { src: 'Zombie.png', x: 800, y: 100, angle: 45 },
+            { src: 'Axe.png', x: 500, y: 375, angle: 0 },
+            { src: 'Shotgun.png', x: 600, y: 650, angle: 20 },
+            { src: 'Shotgun Ammo.png', x: 900, y: 400, angle: 20 },
+            { src: 'Pistol Ammo.png', x: 100, y: 850, angle: -20 },
+            { src: 'Machete.png', x: 300, y: 100, angle: -90 },
+            { src: 'Zombie.png', x: 850, y: 800, angle: 135 },
+            { src: 'Food.png', x: 225, y: 625, angle: -20 },
+        ]
         this.loadButtons();
     }
 
@@ -21,10 +32,22 @@ class Menu {
     }
 
     draw() {
-        this.drawTitle();
+        for (const o of this.imgSrcs) {
+            ctx.save();
+            ctx.translate(o.x, o.y);
+            ctx.rotate(o.angle * Math.PI / 180);
+            ctx.scale(100, 100);
+
+            ctx.drawImage(images.get(o.src), -0.5, -0.5, 1, 1);
+
+            ctx.restore();
+        }
+
         for (const button of this.buttons) {
             button.draw();
         }
+
+        this.drawTitle();
         this.drawCredits();
     }
 

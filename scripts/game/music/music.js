@@ -10,13 +10,11 @@ class Music {
         });
         this.playMusic('Day By Day.mp3', () => {
             const timeOfDay = game.world.getTimeOfDay();
-            const daytime = (timeOfDay == 'sunrise' || timeOfDay == 'day');
-            return game.page == 'game' && daytime;
+            return game.page == 'game' && timeOfDay !== 'night';
         });
         this.playMusic('Midnight Ballad.mp3', () => {
             const timeOfDay = game.world.getTimeOfDay();
-            const nighttime = (timeOfDay == 'sunset' || timeOfDay == 'night');
-            return game.page == 'game' && nighttime;
+            return game.page == 'game' && timeOfDay == 'night';
         });
     }
 
@@ -35,7 +33,10 @@ class Music {
                 audio.volume = Math.min(audio.volume + 0.0025, MAX_VOLUME); // fade in
             } else if (audio.volume > 0) {
                 audio.volume = Math.max(0, audio.volume - 0.0025); // fade out
-            } else audio.pause();
+            } else {
+                audio.currentTime = 0;
+                audio.pause();
+            }
         }
     }
 

@@ -39,6 +39,7 @@ class Game {
         this.t = 0;
         this.gameOver = false;
         this.gameOverMenu.animation = 0;
+        delete this.timeAtGameFinish;
         
         this.world.reset();
     }

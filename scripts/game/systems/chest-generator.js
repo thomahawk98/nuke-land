@@ -1,10 +1,11 @@
 function generateChestContents(amount, lootPool = 'test chest') {
     const contents = Array(amount).fill(false);
+    const options = getRandomOptionsFromLootPool(lootPool);
+    if (!options.length) return contents;
     for (let n = 0; n < amount; n++) {
-        const itemChance = 0.1;
+        const itemChance = getItemChanceFromLootPool(lootPool);
         if (Math.random() > itemChance) continue; // no item here
 
-        const options = getRandomOptionsFromLootPool(lootPool);
 
         // pick a random option based on the options relative weights
         const totalWeight = options.reduce((sum, { weight }) => sum + weight, 0);
@@ -43,6 +44,19 @@ function getRandomOptionsFromLootPool(lootPool) {
                 { type: 'pistol', maxCount: 1, weight: 1 },
                 { type: 'shotgun', maxCount: 1, weight: 0.5 },
             ];
+        case 'food chest':
+            return [
+                { type: 'food', maxCount: 4, weight: 1 },
+            ];
         default: return [];
+    }
+}
+
+function getItemChanceFromLootPool(lootPool) {
+    switch (lootPool) {
+        case 'food chest':
+            return 0.35;
+        default:
+            return 0.2;
     }
 }

@@ -2,10 +2,10 @@ class Zombie extends Entity {
     constructor(x, y) {
         super(x, y);
         this.type = 'zombie';
-        this.accel = 0.005;
+        this.accel = 0.006;
 
-        this.health = 100;
-        this.maxHealth = 100;
+        this.health = 150;
+        this.maxHealth = 150;
 
         this.detectionRange = 20;
         this.targetPosition = { x, y };
@@ -13,7 +13,7 @@ class Zombie extends Entity {
         this.randomWaitTime = Math.round(Math.random() * 500);
         this.urgency = 0.99;
 
-        this.damage = 20;
+        this.damage = 30;
         this.range = 1.25;
         this.knockback = 0.2;
         this.maxMeleReload = 100;

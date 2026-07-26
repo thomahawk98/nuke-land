@@ -42,7 +42,7 @@ class Environment {
                 const dist = Math.distTo(player.x, player.y, enemy.x, enemy.y);
                 const dir = Math.dirTo(player.x, player.y, enemy.x, enemy.y);
                 const lineOfSightBlocked = raycast(player.x, player.y, dir, dist);
-                if (lineOfSightBlocked) continue;
+                if (!lineOfSightBlocked) continue;
             }
 
             const dist = Math.distTo(player.x, player.y, enemy.x, enemy.y);
