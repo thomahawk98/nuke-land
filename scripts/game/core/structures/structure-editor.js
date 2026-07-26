@@ -65,6 +65,12 @@ class StructureEditor {
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        ctx.fillStyle = 'white';
+        ctx.f(20);
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText(this.blockType, 10, 10);
+
         ctx.save()
         user.cam.alignViewport();
 
@@ -75,7 +81,6 @@ class StructureEditor {
         ctx.strokeStyle = 'red';
         ctx.line(0, topLeft.y, 0, bottomRight.y);
         ctx.line(topLeft.x, 0, bottomRight.x, 0);
-
 
         this.drawBlocks();
         this.drawCursorPreview();

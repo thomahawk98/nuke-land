@@ -31,14 +31,17 @@ class StructureManager {
         }
 
         // check if the suggested position is too close to an existing structure
-        const DISTANCE_THRESHOLD = 20;
+        const DISTANCE_THRESHOLD = 30;
         for (const structure of this.structures) {
             const dist = Math.distTo(cors.x, cors.y, structure.x, structure.y);
             if (dist < DISTANCE_THRESHOLD) return false;
         }
 
         // add the structure
-        const structure = new House(cors.x, cors.y);
+        const structureTypes = ['01', '01', '01', '02'];
+
+        const type = structureTypes[Math.floor(Math.random() * structureTypes.length)];
+        const structure = new House(type, cors.x, cors.y);
 
         this.structures.push(structure);
         return structure;
