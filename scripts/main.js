@@ -21,7 +21,10 @@ setup.initialize(title, dimensions, canvas, ctx);
 // load assets
 const sources = {
     images: [],
-    audios: ['Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3'],
+    audios: [
+        'Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3',
+        'Hover.mp3', 'Click.mp3'
+    ],
     fonts: ['super-crawler.ttf'],
 };
 

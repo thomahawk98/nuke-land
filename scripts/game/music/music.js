@@ -39,7 +39,6 @@ class Music {
         if (!music) return false;
         
         const clone = music.cloneNode();
-        clone.volume = 2;
         clone.play();
     }
 
