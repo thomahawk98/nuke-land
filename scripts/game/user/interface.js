@@ -9,10 +9,11 @@ class Interface {
     }
 
     draw() {
+        if (game.page !== 'game') return;
+        this.drawHint();
         this.inventoryManager.draw();
         this.drawPlayerHotbar();
-        if (game.page == 'game') this.drawTimer();
-        this.drawHint();
+        this.drawTimer();
     }
 
     drawPlayerHotbar() {
@@ -71,7 +72,8 @@ class Interface {
     drawTimer() {
         ctx.fillStyle = 'rgba(0,0,0,0.5)';
         ctx.fillRect(0, 0, 220, 80);
-        const time = game.t % game.world.CYCLE_LENGTH;
+        const t = (game.timeAtGameFinish !== undefined ? game.timeAtGameFinish : game.t);
+        const time = t % game.world.CYCLE_LENGTH;
         const nightTime = (time > game.world.DAY_LENGTH_FRAMES)
         const countDown = nightTime
             ? game.world.NIGHT_LENGTH_FRAMES - (time - game.world.DAY_LENGTH_FRAMES)

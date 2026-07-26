@@ -1,7 +1,7 @@
 function generateChestContents(amount, lootPool = 'test chest') {
     const contents = Array(amount).fill(false);
     for (let n = 0; n < amount; n++) {
-        const itemChance = 1//0.1;
+        const itemChance = 0.1;
         if (Math.random() > itemChance) continue; // no item here
 
         const options = getRandomOptionsFromLootPool(lootPool);

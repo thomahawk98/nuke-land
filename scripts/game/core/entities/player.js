@@ -5,19 +5,8 @@ class Player extends Entity {
         this.type = 'player';
 
         this.inventory = new Inventory(this, 4, 3);
-
-        // add random items to player inventory (remove later)
-        for (let n = 0; n < this.inventory.width * this.inventory.height; n++) {
-            if (Math.random() < 0.5) {
-                const count = Math.ceil(Math.random() * 5);
-                const item = new Item('test item', { slot: n }, count);
-                this.inventory.items[n] = item;
-            }
-        }
-
-        this.inventory.items[0] = new Item('axe', { slot: 0 });
-        this.inventory.items[1] = new Item('machete', { slot: 1 });
-        this.inventory.items[2] = new Item('bat', { slot: 2 });
+        this.inventory.items[0] = new Item('machete', { slot: 0 });
+        this.inventory.items[1] = new Item('food', { slot: 1 }, 4);
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
@@ -44,6 +33,14 @@ class Player extends Entity {
     }
 
     update() {
+        if (this.dead) {
+            if (!game.gameOver) {
+                game.gameOver = true;
+                game.timeAtGameFinish = game.t;
+            }
+            return;
+        }
+
         this.updateVitals();
         this.updateAcceleration();
         this.updateMotion();
@@ -103,7 +100,12 @@ class Player extends Entity {
     useItem() {
         if (this.reload > 0) return;
         const item = this.inventory.getSelectedItem();
-        if (!item || (item.type !== 'pistol' && item.type !== 'shotgun')) return;
+        if (!item) return;
+        if (item.type == 'pistol' || item.type == 'shotgun') this.shootGun(item);
+        if (item.type == 'food') this.eat(item);
+    }
+
+    shootGun(item) {
         if (item.ammo <= 0) return;
 
         const world = this.user.getMouseWorldCors();
@@ -125,6 +127,17 @@ class Player extends Entity {
 
         item.ammo--;
         this.reload = item.maxRangedReload;
+    }
+
+    eat(item) {
+        const healing = item.nourishment || 25;
+        this.health = Math.min(this.health + healing, this.maxHealth);
+        item.count--;
+
+        if (item.count <= 0) {
+            item.delete = true;
+            return;
+        }
     }
 
     getEnemiesInMeleAttackRange(item) {
@@ -181,7 +194,7 @@ class Player extends Entity {
 
         ctx.restore();
 
-        this.drawItem();
+        if (!this.dead) this.drawItem();
     }
 
     drawItem() {
