@@ -96,6 +96,7 @@ class ChunkManager {
 
     draw() {
         const player = game.getPlayer();
+        if(!player) return;
         const RENDER_DISTANCE = player.RENDER_DISTANCE;
         const chunkCors = this.getChunkCors(player.x, player.y);
 
