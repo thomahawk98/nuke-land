@@ -37,6 +37,10 @@ class Zombie extends Entity {
         // update to use item if zombies can hold items
         const enemiesInRange = this.getEnemiesInMeleAttackRange();
         if (enemiesInRange.length !== 0) this.performMeleAttack();
+
+        if(Math.random() < 0.00025) {
+            game.music.playSound(`Zombie ${Math.round(Math.random() * 7)}.mp3`, 0.5);
+        }
     }
 
     updateTargetToPlayer() {
@@ -82,9 +86,13 @@ class Zombie extends Entity {
     }
 
     draw() {
-        ctx.fillStyle = 'rgb(0,200,0)';
-        ctx.fillRect(-0.5, -0.5, 1, 1);
-        this.drawHealthbar();
+        ctx.save();
+        ctx.rotate(Math.PI);
+        ctx.scale(1.5, 1.5);
+        
+        ctx.drawImage(images.get('Zombie.png'), -0.5, -0.5, 1, 1);
+
+        ctx.restore();
     }
 
     isEnemy(o) {

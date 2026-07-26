@@ -6,6 +6,7 @@ const setup = {
         this.setupCSS(canvas);
         this.fitCanvas(dimensions, canvas);
         this.patchCtx(ctx);
+        ctx.imageSmoothingEnabled = false;
     },
     patchMath() {
         for (const [key, value] of Object.entries(mathPatch)) {

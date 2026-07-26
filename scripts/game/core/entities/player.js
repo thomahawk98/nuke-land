@@ -51,6 +51,8 @@ class Player extends Entity {
 
         // prevent the player from being deleted idk
         this.delete = false;
+        const world = this.user.getMouseWorldCors();
+        this.angle = Math.dirTo(this.x, this.y, world.x, world.y);
     }
 
     updateControls() { // called by user updateControls() function
@@ -85,7 +87,16 @@ class Player extends Entity {
     }
 
     useItem() {
-
+        const world = this.user.getMouseWorldCors();
+        const data = {
+            angle: Math.dirTo(this.x, this.y, world.x, world.y),
+            bulletSpread: 5,
+            bulletSpeed: 0.5,
+            bulletDamage: 99,
+            bulletKnockback: 0.25,
+        }
+        const bullet = new Bullet(this, data);
+        game.world.env.objects.push(bullet);
     }
 
     getEnemiesInMeleAttackRange(item) {
@@ -135,8 +146,11 @@ class Player extends Entity {
     }
 
     draw() {
-        ctx.fillStyle = 'red';
-        ctx.fillRect(-0.5, -0.5, 1, 1);
-        this.drawHealthbar();
+        ctx.save();
+        ctx.scale(1.5, 1.5);
+
+        ctx.drawImage(images.get('Player.png'), -0.5, -0.5, 1, 1);
+
+        ctx.restore();
     }
 }

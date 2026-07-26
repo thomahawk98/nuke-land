@@ -17,15 +17,26 @@ const dimensions = {
 
 setup.initialize(title, dimensions, canvas, ctx);
 
-
 // load assets
 const sources = {
-    images: [],
+    images: [
+        'Zombie.png',
+        'Player.png'
+    ],
     audios: [
         'Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3',
-        'Hover.mp3', 'Click.mp3'
+        'Hover.mp3', 'Click.mp3',
+        'Glass Breaking.mp3',
+        'Bullet Impact 0.mp3', 'Bullet Impact 1.mp3', 'Bullet Impact 2.mp3',
+        'Bullet Hit Flesh.mp3',
+        'Axe Hit Flesh 0.mp3', 'Axe Hit Flesh 1.mp3',
+        'Machete Hit Flesh 0.mp3', 'Machete Hit Flesh 1.mp3',
+        'Bat Hit Flesh.mp3',
+        'Zombie 0.mp3', 'Zombie 1.mp3', 'Zombie 2.mp3', 'Zombie 3.mp3', 'Zombie 4.mp3', 'Zombie 5.mp3', 'Zombie 6.mp3', 'Zombie 7.mp3',
     ],
-    fonts: ['super-crawler.ttf'],
+    fonts: [
+        'super-crawler.ttf'
+    ],
 };
 
 // load the sources

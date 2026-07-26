@@ -27,9 +27,12 @@ class Environment {
 
     resolveEntityCollisions() {
         for (let n = 0; n < this.objects.length; n++) {
+            const o = this.objects[n];
+            if (o.normalCollisionsDisabled) continue;
+
             for (let n2 = n + 1; n2 < this.objects.length; n2++) {
-                const o = this.objects[n];
                 const o2 = this.objects[n2];
+                if (o2.normalCollisionsDisabled) continue;
 
                 // skip entities that are too far away
                 const dist = Math.distTo(o.x, o.y, o2.x, o2.y);
@@ -85,10 +88,16 @@ class Environment {
             // translate to object position
             ctx.save();
             ctx.translate(o.x, o.y);
+
+            ctx.save();
             if (o.angle) ctx.rotate(o.angle * Math.PI / 180);
 
             // draw object
             o.draw();
+
+            ctx.restore();
+            
+            o.drawHealthbar();
 
             ctx.restore();
 

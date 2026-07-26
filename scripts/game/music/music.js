@@ -28,21 +28,23 @@ class Music {
 
         // play all the audio
         for (const audio of audios.values()) {
+            const MAX_VOLUME = 0.5;
             if (typeof audio.condition !== 'function') continue;
             if (audio.condition()) {
                 audio.play();
-                audio.volume = Math.min(audio.volume + 0.01, 1); // fade in
+                audio.volume = Math.min(audio.volume + 0.0025, MAX_VOLUME); // fade in
             } else if (audio.volume > 0) {
-                audio.volume = Math.max(0, audio.volume - 0.01); // fade out
+                audio.volume = Math.max(0, audio.volume - 0.0025); // fade out
             } else audio.pause();
         }
     }
 
-    playSound(src) {
+    playSound(src, volume = 1) {
         const music = audios.get(src);
-        if (!music) return false;
+        if (!music) return console.log('sound', src, 'not found');
 
         const clone = music.cloneNode();
+        clone.volume = volume;
         clone.play();
     }
 

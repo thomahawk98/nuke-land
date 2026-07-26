@@ -15,7 +15,6 @@ class Entity {
         this.maxHealth = 100;
 
         this.angle = 0;
-        this.directionFricionMultipliers = { x: 1, y: 1 };
 
         this.damage = 10;
         this.range = 2;
@@ -38,8 +37,12 @@ class Entity {
     updateVitals() {
         if (this.meleReload > 0) this.meleReload--;
         if (this.invincibility > 0) this.invincibility--;
+        if (this.decay !== undefined) this.decay > 0 ? this.decay-- : this.delete = true;
         if (this.health <= 0) this.dead = true;
         if (this.dead) this.delete = true;
+
+        this.prevX = this.x;
+        this.prevY = this.y;
     }
 
     updateAcceleration() {
@@ -49,27 +52,19 @@ class Entity {
         this.move.x += accel.x;
         this.move.y += accel.y;
 
+        this.angle = angle;
+
         // reset accel target for next iteration
         this.accelTarget = { x: 0, y: 0 };
     }
 
     updateMotion() {
-        // multiply friction by the objects directional friction multipliers
-        // objects like cars will obviously have more friction sideways than forwards and backwards
-        const surfaceFriction = { x: 0.1, y: 0.1 };
-        const worldFrictionMultipliers = Math.rotate(0, 0, this.directionFricionMultipliers.x, this.directionFricionMultipliers.y, this.angle); // rotate to the objects angle
-        const friction = {
-            x: surfaceFriction.x * worldFrictionMultipliers.x,
-            y: surfaceFriction.y * worldFrictionMultipliers.y
-        }
+        const friction = this.friction !== undefined ? this.friction : 0.1;
+        const damping = 1 - friction;
 
-        const damping = {
-            x: 1 - friction.x,
-            y: 1 - friction.y,
-        };
+        this.move.x *= damping;
+        this.move.y *= damping;
 
-        this.move.x *= damping.x;
-        this.move.y *= damping.y;
         if (this.normalCollisionsDisabled) {
             this.x += this.move.x;
             this.y += this.move.y;
@@ -151,6 +146,12 @@ class Entity {
             enemy.move.x += knockback.x;
             enemy.move.y += knockback.y;
         }
+
+        // play sounds
+        if (enemies.length == 0) return;
+        if (item.type == 'axe') game.music.playSound(`Axe Hit Flesh ${Math.round(Math.random())}.mp3`);
+        if (item.type == 'machete') game.music.playSound(`Machete Hit Flesh ${Math.round(Math.random())}.mp3`);
+        if (item.type == 'bat') game.music.playSound(`Bat Hit Flesh.mp3`);
     }
 
     getEnemiesInMeleAttackRange(item) {
@@ -177,5 +178,11 @@ class Entity {
         if (this.invincibility > 0) return; // can't be damaged
         this.health -= amount;
         this.invincibility = 100; // 0.5s of invincibility after taking damage
+    }
+
+    checkIfMovedBlocks() {
+        const x = Math.floor(this.x);
+        const y = Math.floor(this.y);
+        return x !== Math.floor(this.prevX) || y !== Math.floor(this.prevY);
     }
 }

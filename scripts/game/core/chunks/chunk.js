@@ -71,7 +71,7 @@ class Chunk {
             if (!visibleToCam) continue;
 
             const light = o.light//Math.max(game.world.daylight, o.light);
-            const alpha = Math.clamp01(light * (o.solid ? 1 : 0.75));
+            const alpha = Math.clamp01(light) * (o.solid ? 1 : 0.5);
             ctx.globalAlpha = alpha;
 
             const color = this.getBlockColor(o);
