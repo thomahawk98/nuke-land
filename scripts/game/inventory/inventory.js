@@ -40,9 +40,12 @@ class Inventory {
     }
 
     updateItems() {
-        for (const item of this.items) {
+        for (let n = 0; n < this.items.length; n++) {
+            const item = this.items[n];
             if (!item) continue;
             item.update();
+
+            if(item.delete) this.items[n] = false;
         }
     }
 
@@ -89,7 +92,7 @@ class Inventory {
 
         item.draw();
         if (item.count !== 1) item.drawCount();
-        if (item.type == 'shotgun' || item.type == 'pistol')  item.drawAmmoCount();
+        if (item.type == 'shotgun' || item.type == 'pistol') item.drawAmmoCount();
 
         ctx.restore();
     }

@@ -5,6 +5,8 @@ class InventoryManager {
     }
 
     update() {
+        if (this.itemHeldByMouse.delete) this.itemHeldByMouse = false;
+
         // sort player inventories to the bottom
         this.displayedInventories = this.displayedInventories
             .sort((a, b) => {
@@ -61,9 +63,18 @@ class InventoryManager {
         }
 
         if (user.mouse.left.click) {
-            // swap locations
-            const item = this.itemHeldByMouse;
-            const itemUnderMouse = this.getItemUnderMouse();
+            this.swapMouseItems();
+        }
+    }
+
+    swapMouseItems() {
+        // swap locations
+        const item = this.itemHeldByMouse;
+        const itemUnderMouse = this.getItemUnderMouse();
+        if(itemUnderMouse == null) return false;
+
+        const combined = this.tryCombining(itemUnderMouse, item);
+        if (!combined) {
             this.setItemUnderMouse(item);
             this.itemHeldByMouse = itemUnderMouse;
         }
@@ -71,7 +82,7 @@ class InventoryManager {
 
     setItemUnderMouse(item) {
         const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
-        if (mouseIndexes === false) return false;
+        if (mouseIndexes === false) return null;
 
         const [inventoryIndex, slotIndex] = mouseIndexes;
         this.displayedInventories[inventoryIndex].items[slotIndex] = item;
@@ -79,7 +90,7 @@ class InventoryManager {
 
     getItemUnderMouse(item) {
         const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
-        if (mouseIndexes === false) return false;
+        if (mouseIndexes === false) return null;
 
         const [inventoryIndex, slotIndex] = mouseIndexes;
         return this.displayedInventories[inventoryIndex].items[slotIndex];
@@ -193,8 +204,9 @@ class InventoryManager {
         return (
             o1 && o2 &&
             o1.type == o2.type &&
+            o1.subtype == o2.subtype &&
             o1.slot !== o2.slot &&
-            o1.count < Items.getMaxStackSizeForType(o1.type)
+            o1.count < Item.getMaxStackSizeForType(o1.type)
         )
     };
 
@@ -213,27 +225,27 @@ class InventoryManager {
     };
 
     canBeLoaded(gun, ammo) {
-        if (!gun || !gun) return false;
-        var compatible = this.getGunAmmoCompatibility(o1, o2);
+        if (!gun || !ammo) return false;
+        var compatible = this.getGunAmmoCompatibility(gun, ammo);
+        //console.log(compatible, gun, ammo)
         if (!compatible) return false;
 
         //are there less bullets than gun max bullet capacity?
-        if (gun.ammo >= (gun.maxCapacity || 99)) return false;
+        if (gun.ammo >= gun.maxAmmo) return false;
         else return true;
     };
 
     getGunAmmoCompatibility(gun, ammo) {
         if (ammo.type !== "ammo") return false;
-        if (gun.type !== "shotgun" && loader.type !== 'pistol') return false;
+        if (gun.type !== "shotgun" && gun.type !== 'pistol') return false;
         if (ammo.subtype !== gun.type) return false; // incompatible ammo
         return true; // yay!
     };
 
     loadAmmo(gun, ammo) {
-        var maxCapacity = gun.maxCapacity || 99;
-        var amountTransfered = Math.min(maxCapacity - gun.ammo, ammo.count); //don't transfer more than the stack can hold, or more than the item has
+        var amountTransfered = Math.min(gun.maxAmmo - gun.ammo, ammo.count); //don't transfer more than the stack can hold, or more than the item has
 
-        item.count += amountTransfered;
+        gun.ammo += amountTransfered;
         ammo.count -= amountTransfered;
 
         if (ammo.count > 0) return false; // the whole stack was not transferred
@@ -272,14 +284,19 @@ class InventoryManager {
         ctx.save();
         ctx.translate(user.mouse.x, user.mouse.y);
 
+        const h = item.subtype ? 55 : 40;
         ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, 100, 40);
+        ctx.fillRect(0, 0, 100, h);
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.f(20);
         ctx.fillStyle = 'white';
+        ctx.f(20);
         ctx.fillText(item.type.charAt(0).toUpperCase() + item.type.slice(1), 50, 20);
+        if (item.subtype) {
+            ctx.f(14);
+            ctx.fillText(item.subtype, 50, 40);
+        }
 
         ctx.restore();
     }

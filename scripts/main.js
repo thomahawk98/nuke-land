@@ -24,6 +24,7 @@ const sources = {
         'Player.png',
         'Axe.png', 'Machete.png', 'Bat.png',
         'Shotgun.png', 'Pistol.png',
+        'Shotgun Ammo.png', 'Pistol Ammo.png',
         'Food.png'
     ],
     audios: [

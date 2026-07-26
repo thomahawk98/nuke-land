@@ -40,8 +40,11 @@ class Item {
         switch (type) {
             case 'machete':
             case 'axe':
+            case 'bat':
+            case 'pistol':
+            case 'shotgun':
                 return 1;
-            default: return 99;
+            default: return 16;
         }
     }
 
@@ -120,6 +123,9 @@ class Item {
             ctx.drawImage(images.get('Pistol.png'), -25, -25, 50, 50);
         } else if (this.type == 'food') {
             ctx.drawImage(images.get('Food.png'), -25, -25, 50, 50);
+        } else if (this.type == 'ammo') {
+            if (this.subtype == 'shotgun') ctx.drawImage(images.get('Shotgun Ammo.png'), -25, -25, 50, 50);
+            if (this.subtype == 'pistol') ctx.drawImage(images.get('Pistol Ammo.png'), -25, -25, 50, 50);
         } else {
             ctx.fillStyle = this.color ? this.color : 'red';
             ctx.fillRect(-25, -25, 50, 50);
@@ -143,7 +149,7 @@ class Item {
 
         ctx.restore();
     }
-    
+
 
     drawAmmoCount() {
         const x = 0, y = 20;
