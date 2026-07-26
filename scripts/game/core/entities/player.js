@@ -68,7 +68,7 @@ class Player extends Entity {
             }
         }
 
-        if(this.user.keys.up[' ']) {
+        if (this.user.keys.up[' ']) {
             // open all doors in player's vacinity
             const RANGE = 3;
             for (let x = -RANGE; x <= RANGE; x++) {
@@ -80,7 +80,7 @@ class Player extends Entity {
                     // check if chest is outside opening range
                     const dist = Math.distTo(0, 0, x, y);
                     if (dist > RANGE) continue;
-                    
+
                     block.solid = !block.solid;
                 }
             }
@@ -97,24 +97,34 @@ class Player extends Entity {
 
     attackWithItem() {
         const item = this.inventory.getSelectedItem();
-        if (item.type == 'gun') {
-            item.fire();
-        } else {
-            this.performMeleAttack(item);
-        }
+        this.performMeleAttack(item);
     }
 
     useItem() {
+        if (this.reload > 0) return;
+        const item = this.inventory.getSelectedItem();
+        if (!item || (item.type !== 'pistol' && item.type !== 'shotgun')) return;
+        if (item.ammo <= 0) return;
+
         const world = this.user.getMouseWorldCors();
-        const data = {
-            angle: Math.dirTo(this.x, this.y, world.x, world.y),
-            bulletSpread: 5,
-            bulletSpeed: 0.5,
-            bulletDamage: 99,
-            bulletKnockback: 0.25,
+        const angle = Math.dirTo(this.x, this.y, world.x, world.y);
+
+        // fire the gun's bullets
+        for (let n = 0; n < item.numberOfBullets; n++) {
+            const data = {
+                angle: angle,
+                bulletSpread: item.bulletSpread,
+                bulletSpeed: item.bulletSpeed,
+                bulletDamage: item.bulletDamage,
+                bulletKnockback: item.bulletKnockback,
+            }
+
+            const bullet = new Bullet(this, data);
+            game.world.env.objects.push(bullet);
         }
-        const bullet = new Bullet(this, data);
-        game.world.env.objects.push(bullet);
+
+        item.ammo--;
+        this.reload = item.maxRangedReload;
     }
 
     getEnemiesInMeleAttackRange(item) {

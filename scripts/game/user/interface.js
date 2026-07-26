@@ -46,7 +46,9 @@ class Interface {
 
     drawMeleReloadOverlay(player) {
         const item = player.inventory.getSelectedItem();
-        const percent = player.meleReload / (item.maxMeleReload || player.maxMeleReload);
+        const itemReload = !item ? player.maxMeleReload :
+            item.type == 'shotgun' || item.type == 'pistol' ? item.maxRangedReload : item.maxMeleReload;
+        const percent = player.reload / itemReload;
 
         ctx.fillStyle = 'rgba(255,255,255,0.35)';
         ctx.beginPath();
@@ -82,7 +84,7 @@ class Interface {
 
         ctx.textBaseline = 'top';
         ctx.textAlign = 'left';
-        ctx.fillStyle = nightTime ? 'red' : 'white';
+        ctx.fillStyle = nightTime ? 'red' : minutes == 0 ? 'red' : 'white';
         ctx.f(50);
         ctx.fillText(text, 20, 20);
     }
@@ -98,6 +100,7 @@ class Interface {
 
         ctx.save();
         ctx.translate(screen.x, screen.y);
+        ctx.globalAlpha = 0.75 + Math.sin(game.t * 0.02) * 0.25;
 
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
@@ -105,6 +108,7 @@ class Interface {
         ctx.font = 'bold 20px Arial'
         ctx.fillText(hint, 0, 35);
 
+        ctx.globalAlpha = 1;
         ctx.restore();
     }
 

@@ -6,10 +6,15 @@ class Game {
         this.menu = new Menu();
         this.music = new Music();
         this.debug = false;
+        this.lastUpdate = performance.now();
     }
 
     tick() {
-        this.t += 1.5;
+        const now = performance.now();
+        const difference = now - this.lastUpdate;
+        this.lastUpdate = now;
+        this.t += difference * 0.1;
+
         this.update();
         this.draw();
     };

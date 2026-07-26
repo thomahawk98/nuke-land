@@ -53,7 +53,6 @@ class Item {
                 };
             case 'machete':
                 return {
-                    color: 'silver',
                     damage: 35,
                     knockback: 0.25,
                     range: 4.5,
@@ -62,7 +61,6 @@ class Item {
                 };
             case 'axe':
                 return {
-                    color: 'red',
                     damage: 65,
                     knockback: 0.35,
                     range: 3.5,
@@ -71,18 +69,42 @@ class Item {
                 };
             case 'bat':
                 return {
-                    color: 'tan',
                     damage: 25,
                     knockback: 0.5,
                     range: 3.5,
                     maxMeleReload: 100,
                     angleOfAttack: 90,
                 };
+            case 'pistol':
+                return {
+                    bulletDamage: 50,
+                    bulletKnockback: 0.2,
+                    bulletSpeed: 0.5,
+                    bulletSpread: 2,
+                    numberOfBullets: 1,
+                    maxRangedReload: 25,
+                    range: 10,
+                    ammo: 12,
+                    maxAmmo: 12
+                };
+            case 'shotgun':
+                return {
+                    bulletDamage: 25,
+                    bulletKnockback: 0.15,
+                    bulletSpeed: 0.35,
+                    bulletSpread: 30,
+                    numberOfBullets: 6,
+                    maxRangedReload: 100,
+                    range: 7,
+                    ammo: 12,
+                    maxAmmo: 12
+                };
             default: return {}
         }
     }
 
     update() {
+
     }
 
     draw() {
@@ -120,7 +142,7 @@ class Item {
         ctx.fillRect(-10, -10, 20, 20);
 
         ctx.fillStyle = 'white';
-        ctx.font = '14px Arial';
+        ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(this.count, 0, 0)
@@ -138,8 +160,8 @@ class Item {
         ctx.fillStyle = 'black';
         ctx.fillRect(-15, -10, 30, 20);
 
-        ctx.fillStyle = 'white';
-        ctx.font = '14px Arial';
+        ctx.fillStyle = this.ammo > 0 ? 'white' : 'red';
+        ctx.font = 'bold 14px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(this.ammo, 0, 0)

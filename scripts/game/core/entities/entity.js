@@ -9,8 +9,6 @@ class Entity {
         this.accel = 0.01;
         this.accelTarget = { x: 0, y: 0 };
 
-        this.meleReload = 0;
-
         this.health = 100;
         this.maxHealth = 100;
 
@@ -19,7 +17,7 @@ class Entity {
         this.damage = 10;
         this.range = 2;
         this.knockback = 0.25;
-        this.meleReload = 0;
+        this.reload = 0;
         this.maxMeleReload = 50;
         this.angleOfAttack = 75; // only matters for the player
 
@@ -35,7 +33,7 @@ class Entity {
     }
 
     updateVitals() {
-        if (this.meleReload > 0) this.meleReload--;
+        if (this.reload > 0) this.reload--;
         if (this.invincibility > 0) this.invincibility--;
         if (this.decay !== undefined) this.decay > 0 ? this.decay-- : this.delete = true;
         if (this.health <= 0) this.dead = true;
@@ -134,8 +132,8 @@ class Entity {
             angleOfAttack: this.angleOfAttack
         };
 
-        if (this.meleReload > 0) return;
-        this.meleReload = item.maxMeleReload;
+        if (this.reload > 0) return;
+        this.reload = item.maxMeleReload;
 
         const enemies = this.getEnemiesInMeleAttackRange(item);
         for (const enemy of enemies) {

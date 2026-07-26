@@ -1,7 +1,7 @@
 function generateChestContents(amount, lootPool = 'test chest') {
     const contents = Array(amount).fill(false);
     for (let n = 0; n < amount; n++) {
-        const itemChance = 0.1;
+        const itemChance = 1//0.1;
         if (Math.random() > itemChance) continue; // no item here
 
         const options = getRandomOptionsFromLootPool(lootPool);
@@ -16,7 +16,7 @@ function generateChestContents(amount, lootPool = 'test chest') {
         });
 
         const type = option.type;
-        const count = Math.floor(Math.random() * option.maxCount);
+        const count = Math.ceil(Math.random() * option.maxCount);
 
         // set item
         const item = new Item(type, { slot: n }, count);
@@ -31,6 +31,14 @@ function getRandomOptionsFromLootPool(lootPool) {
         case 'test chest':
             return [
                 { type: 'test item', maxCount: 99, weight: 1 },
+            ];
+        case 'weapons chest':
+            return [
+                { type: 'bat', maxCount: 1, weight: 5 },
+                { type: 'machete', maxCount: 1, weight: 2 },
+                { type: 'axe', maxCount: 1, weight: 1 },
+                { type: 'pistol', maxCount: 1, weight: 1 },
+                { type: 'shotgun', maxCount: 1, weight: 0.5 },
             ];
         default: return [];
     }

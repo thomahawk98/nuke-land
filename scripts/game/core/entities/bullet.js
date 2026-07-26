@@ -67,7 +67,7 @@ class Bullet extends Entity {
 
     impact(collider, entityCollision) {
         if (collider instanceof Entity) { // collided with entity
-            collider.takeDamage(this.damage);
+            collider.health -= this.damage; // don't take iFrames
 
             collider.move.x += this.move.x * this.knockback;
             collider.move.y += this.move.y * this.knockback;
