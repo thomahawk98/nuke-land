@@ -148,10 +148,19 @@ class Entity {
         }
 
         // play sounds
-        if (enemies.length == 0) return;
+        this.playAttackSound(item, enemies.length > 0);
+    }
+
+    playAttackSound(item, hit) {
+        if (!hit) {
+            game.music.playSound(`Whoosh.mp3`);
+            return;
+        }
+        
         if (item.type == 'axe') game.music.playSound(`Axe Hit Flesh ${Math.round(Math.random())}.mp3`);
-        if (item.type == 'machete') game.music.playSound(`Machete Hit Flesh ${Math.round(Math.random())}.mp3`);
-        if (item.type == 'bat') game.music.playSound(`Bat Hit Flesh.mp3`);
+        else if (item.type == 'machete') game.music.playSound(`Machete Hit Flesh ${Math.round(Math.random())}.mp3`);
+        else if (item.type == 'bat') game.music.playSound(`Bat Hit Flesh.mp3`);
+        else game.music.playSound(`Bat Hit Flesh.mp3`);
     }
 
     getEnemiesInMeleAttackRange(item) {

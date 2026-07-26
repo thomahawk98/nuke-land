@@ -86,10 +86,28 @@ class Item {
     }
 
     draw() {
-        ctx.fillStyle = this.color ? this.color : 'red';
-        ctx.fillRect(-25, -25, 50, 50);
+        if (this.type == 'axe') {
+            ctx.drawImage(images.get('Axe.png'), -25, -25, 50, 50);
+        } else if (this.type == 'machete') {
+            ctx.drawImage(images.get('Machete.png'), -25, -25, 50, 50);
+        } else if (this.type == 'bat') {
+            ctx.drawImage(images.get('Bat.png'), -25, -25, 50, 50);
+        } else if (this.type == 'shotgun') {
+            ctx.drawImage(images.get('Shotgun.png'), -25, -25, 50, 50);
+        } else if (this.type == 'pistol') {
+            ctx.drawImage(images.get('Pistol.png'), -25, -25, 50, 50);
+        } else if (this.type == 'food') {
+            ctx.drawImage(images.get('Food.png'), -25, -25, 50, 50);
+        } else {
+            ctx.fillStyle = this.color ? this.color : 'red';
+            ctx.fillRect(-25, -25, 50, 50);
+        }
 
         if (this.count !== 1) this.drawCount();
+
+        if(this.type == 'shotgun' || this.type == 'pistol') {
+            this.drawAmmoCount();
+        }
     }
 
     drawCount() {
@@ -106,6 +124,25 @@ class Item {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(this.count, 0, 0)
+
+        ctx.restore();
+    }
+    
+
+    drawAmmoCount() {
+        const x = 0, y = 20;
+
+        ctx.save();
+        ctx.translate(x, y);
+
+        ctx.fillStyle = 'black';
+        ctx.fillRect(-15, -10, 30, 20);
+
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.ammo, 0, 0)
 
         ctx.restore();
     }

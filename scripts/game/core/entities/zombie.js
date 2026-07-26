@@ -38,7 +38,7 @@ class Zombie extends Entity {
         const enemiesInRange = this.getEnemiesInMeleAttackRange();
         if (enemiesInRange.length !== 0) this.performMeleAttack();
 
-        if(Math.random() < 0.00025) {
+        if (Math.random() < 0.00025) {
             game.music.playSound(`Zombie ${Math.round(Math.random() * 7)}.mp3`, 0.5);
         }
     }
@@ -47,18 +47,28 @@ class Zombie extends Entity {
         const player = game.getPlayer();
         if (!player) return false;
 
+        const timeOfDay = game.world.getTimeOfDay();
+        if (timeOfDay == 'night') {
+            this.targetPlayer(player);
+            return true;
+        }
+
         const dist = Math.distTo(this.x, this.y, player.x, player.y);
         if (dist > this.detectionRange) return false;
-        
+
         const dir = Math.dirTo(this.x, this.y, player.x, player.y);
         const lineOfSightBlocked = raycast(this.x, this.y, dir, dist);
-        if(lineOfSightBlocked) return false;
+        if (lineOfSightBlocked) return false;
 
+        this.targetPlayer(player);
+        return true;
+    }
+
+    targetPlayer(player) {
         this.targetPosition.x = player.x;
         this.targetPosition.y = player.y;
         this.randomWaitTime = 0;
         this.urgency = 0.99;
-        return true;
     }
 
     pickRandomTarget() {
@@ -89,7 +99,7 @@ class Zombie extends Entity {
         ctx.save();
         ctx.rotate(Math.PI);
         ctx.scale(1.5, 1.5);
-        
+
         ctx.drawImage(images.get('Zombie.png'), -0.5, -0.5, 1, 1);
 
         ctx.restore();

@@ -21,7 +21,10 @@ setup.initialize(title, dimensions, canvas, ctx);
 const sources = {
     images: [
         'Zombie.png',
-        'Player.png'
+        'Player.png',
+        'Axe.png', 'Machete.png', 'Bat.png',
+        'Shotgun.png', 'Pistol.png',
+        'Food.png'
     ],
     audios: [
         'Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3',
@@ -32,6 +35,7 @@ const sources = {
         'Axe Hit Flesh 0.mp3', 'Axe Hit Flesh 1.mp3',
         'Machete Hit Flesh 0.mp3', 'Machete Hit Flesh 1.mp3',
         'Bat Hit Flesh.mp3',
+        'Whoosh.mp3',
         'Zombie 0.mp3', 'Zombie 1.mp3', 'Zombie 2.mp3', 'Zombie 3.mp3', 'Zombie 4.mp3', 'Zombie 5.mp3', 'Zombie 6.mp3', 'Zombie 7.mp3',
     ],
     fonts: [

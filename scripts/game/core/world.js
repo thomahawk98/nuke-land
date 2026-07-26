@@ -33,6 +33,7 @@ class World {
     }
 
     getTimeOfDay(time = game.t) {
+        return 'night'
         const t = Math.modulo(time, this.CYCLE_LENGTH);
 
         if (t < this.transition) return 'sunrise';
