@@ -1,8 +1,8 @@
 class World {
     constructor() {
         this.daylight = 0.5;
-        this.DAY_LENGTH_FRAMES = 3 * 100; // 3 minutes
-        this.NIGHT_LENGTH_FRAMES = 1 * 100; // 1 minute
+        this.DAY_LENGTH_FRAMES = 3 * 60 * 100; // 3 minutes
+        this.NIGHT_LENGTH_FRAMES = 1 * 60 * 100; // 1 minute
         this.CYCLE_LENGTH = this.DAY_LENGTH_FRAMES + this.NIGHT_LENGTH_FRAMES;
 
         this.MAX_DAYLIGHT = 1.0;
@@ -25,8 +25,7 @@ class World {
     }
 
     updateDaylight() {
-        const light = this.getDaylight(game.t);
-        this.daylight = light;
+        this.daylight = this.getDaylight(game.t);
     }
 
     getCyclePercent(time = game.t) {

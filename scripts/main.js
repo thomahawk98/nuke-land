@@ -21,7 +21,7 @@ setup.initialize(title, dimensions, canvas, ctx);
 // load assets
 const sources = {
     images: [],
-    audios: [],
+    audios: ['Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3'],
     fonts: ['super-crawler.ttf'],
 };
 
@@ -46,7 +46,7 @@ window.setInterval(main, 10);
 
 //run the game loop
 function gameLoop() {
-    if(editor.enabled) editor.tick();
+    if (editor.enabled) editor.tick();
     else game.tick();
     user.tick();
 }

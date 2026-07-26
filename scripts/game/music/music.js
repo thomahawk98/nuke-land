@@ -1,0 +1,51 @@
+class Music {
+    constructor() {
+
+    }
+
+    init() {
+        // set up music conditions
+        this.playMusic('Hum.mp3', () => {
+            return game.page == 'menu';
+        });
+        this.playMusic('Day By Day.mp3', () => {
+            const timeOfDay = game.world.getTimeOfDay();
+            const daytime = (timeOfDay == 'sunrise' || timeOfDay == 'day');
+            return game.page == 'game' && daytime;
+        });
+        this.playMusic('Midnight Ballad.mp3', () => {
+            const timeOfDay = game.world.getTimeOfDay();
+            const nighttime = (timeOfDay == 'sunset' || timeOfDay == 'night');
+            return game.page == 'game' && nighttime;
+        });
+    }
+
+    update() {
+        if(!this.initialized) {
+            this.init();
+            this.initialized = true;
+        }
+
+        // play all the audio
+        for (const audio of audios.values()) {
+            if (typeof audio.condition !== 'function') continue;
+            if (audio.condition()) audio.play();
+            else audio.pause();
+        }
+    }
+
+    playSound(src) {
+        const music = audios.get(src);
+        if (!music) return false;
+        
+        const clone = music.cloneNode();
+        clone.volume = 2;
+        clone.play();
+    }
+
+    playMusic(src, condition) {
+        const music = audios.get(src);
+        music.condition = condition;
+        music.volume = 0.5;
+    }
+}
