@@ -4,8 +4,8 @@ class Zombie extends Entity {
         this.type = 'zombie';
         this.accel = 0.005;
 
-        this.health = 200;
-        this.maxHealth = 200;
+        this.health = 100;
+        this.maxHealth = 100;
 
         this.detectionRange = 20;
         this.targetPosition = { x, y };
@@ -13,7 +13,7 @@ class Zombie extends Entity {
         this.randomWaitTime = Math.round(Math.random() * 500);
         this.urgency = 0.99;
 
-        this.damage = 40;
+        this.damage = 20;
         this.range = 1.25;
         this.knockback = 0.2;
         this.maxMeleReload = 100;
