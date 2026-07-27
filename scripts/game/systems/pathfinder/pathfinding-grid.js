@@ -12,7 +12,7 @@ class PathfindingGrid {
         this.maxOpacity = 50;
 
         this.DIAGONAL_OFFSETS = [
-            
+
         ]
     }
 
@@ -89,37 +89,42 @@ class PathfindingGrid {
         this.nodes.set(key, node);
     }
 
-    getNeighborsOfNode(node, method = 'diagonal') {
+    // this function doesn't look the best but it's blazingly fast compared to the old one
+    getTraversableNeighborsOfNode(node) {
         const nodes = [];
-        if (method == 'diagonal') {
-            for (let x = -1; x <= 1; x++) {
-                for (let y = -1; y <= 1; y++) {
-                    if (x == 0 && y == 0) continue;
 
-                    const neighbor = this.getNodeAt(node.x + x, node.y + y, true);
-                    if (neighbor) nodes.push(neighbor);
-                }
-            }
-        } else if (method == 'cardinal') {
-            const cors = [[-1, 0], [0, -1], [1, 0], [0, 1]];
-            for (const cor of cors) {
-                const neighbor = this.getNodeAt(node.x + cor[0], node.y + cor[1], true);
-                if (neighbor) nodes.push(neighbor);
-            }
-        } else if (method == 'dynamic') { //used for path finding to prevent cutting solid corners but enable diagonal travel in open space
-            //get cardinal neighbors first
-            const cardinalNeighbors = this.getNeighborsOfNode(node, 'cardinal');
-            let allNeighborsAreTraversable = true;
-            for (const o of cardinalNeighbors) if (!o.traversable) allNeighborsAreTraversable = false;
+        const leftNeighbor = this.getNodeAt(node.x - 1, node.y, true);
+        if (leftNeighbor.traversable) nodes.push(leftNeighbor);
 
-            //looks like the node is in open space ¯\_(ツ)_/¯ (diagonal nodes can be added safely)
-            if (allNeighborsAreTraversable) {
-                const diagonalNeighbors = this.getNeighborsOfNode(node, 'diagonal');
-                nodes.push(...diagonalNeighbors);
-            } else {
-                nodes.push(...cardinalNeighbors);
-            }
+        const rightNeighbor = this.getNodeAt(node.x + 1, node.y, true);
+        if (rightNeighbor.traversable) nodes.push(rightNeighbor);
+
+        const topNeighbor = this.getNodeAt(node.x, node.y - 1, true);
+        if (topNeighbor.traversable) nodes.push(topNeighbor);
+
+        const bottomNeighbor = this.getNodeAt(node.x, node.y + 1, true);
+        if (bottomNeighbor.traversable) nodes.push(bottomNeighbor);
+
+        if (topNeighbor.traversable && leftNeighbor.traversable) {
+            const topLeftNeighbor = this.getNodeAt(node.x - 1, node.y - 1, true);
+            if(topLeftNeighbor.traversable) nodes.push(topLeftNeighbor);
         }
+        
+        if (topNeighbor.traversable && rightNeighbor.traversable) {
+            const topRightNeighbor = this.getNodeAt(node.x + 1, node.y - 1, true);
+            if(topRightNeighbor.traversable) nodes.push(topRightNeighbor);
+        }
+
+        if (bottomNeighbor.traversable && leftNeighbor.traversable) {
+            const bottomLeftNeighbor = this.getNodeAt(node.x - 1, node.y + 1, true);
+            if(bottomLeftNeighbor.traversable) nodes.push(bottomLeftNeighbor);
+        }
+        
+        if (bottomNeighbor.traversable && rightNeighbor.traversable) {
+            const bottomRightNeighbor = this.getNodeAt(node.x + 1, node.y + 1, true);
+            if(bottomRightNeighbor.traversable) nodes.push(bottomRightNeighbor);
+        }
+
         return nodes;
     }
 

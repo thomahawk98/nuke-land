@@ -79,8 +79,8 @@ class Path {
 
     searchCurrentNode(current, uncheckedNodes, checkedNodes) {
         //find all the neighbors
-        const neighbors = this.grid.getNeighborsOfNode(current, 'dynamic');
-        for (const o of neighbors) {
+        const traversableNeighbors = this.grid.getTraversableNeighborsOfNode(current);
+        for (const o of traversableNeighbors) {
             this.checkNeighborNode(o, current, uncheckedNodes, checkedNodes);
         }
 
@@ -90,7 +90,7 @@ class Path {
     }
 
     checkNeighborNode(o, current, uncheckedNodes, checkedNodes) {
-        if (checkedNodes.has(o) || !o.traversable) return;
+        if (checkedNodes.has(o)) return;
 
         //compute costs relative to current node
         const costs = this.getCostsFromParent(o, current);
