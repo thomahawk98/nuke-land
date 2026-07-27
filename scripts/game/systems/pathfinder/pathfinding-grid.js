@@ -10,6 +10,10 @@ class PathfindingGrid {
         this.enabled = false;
         this.opacity = 0;
         this.maxOpacity = 50;
+
+        this.DIAGONAL_OFFSETS = [
+            
+        ]
     }
 
     update() {

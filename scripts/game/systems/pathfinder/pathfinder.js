@@ -3,42 +3,61 @@ class PathFinder {
         this.object = object;
         this.grid = grid;
 
+        this.currentStep = 0;
         this.path = new Path(grid, object, object);
-        this.prevStartPos = {};
-        this.prevEndPos = {};
     }
 
-    getPathTo(value1, value2 = false) {
-        if (value2 !== false) {
-            const point = { x: value1, y: value2 };
-            this.path.end = point;
-        } else {
-            this.path.end = value1;
+    update() {
+        const reachedTarget = this.checkIfReachedCurrentTarget();
+        if (reachedTarget) this.currentStep++;
+    }
+
+    updatePathTo(x, y) {
+        if (x == undefined || y == undefined) return console.error('stupid');
+
+        // check if x and y are equal to the current end x and y
+        const pathChanged = this.checkIfPathChanged(x, y);
+        this.path.end = { x, y };
+        if (!pathChanged) return;
+
+        this.path.calculate();
+        this.currentStep = 0;
+    }
+
+    getNextStepInPath() {
+        if (this.path.steps[2]) return this.path.steps[2];
+        return this.path.steps[1];
+    }
+
+    checkIfReachedCurrentTarget() {
+        const target = this.getCurrentTargetInPath();
+        if (!target) return false;
+
+        const DISTANCE_THRESHOLD = 1; // technically this will target a step like 1 ahead of the current entity position but it should allow for smoother movement
+
+        const dx = this.object.x - target.x;
+        const dy = this.object.y - target.y;
+
+        return dx * dx + dy * dy <= DISTANCE_THRESHOLD * DISTANCE_THRESHOLD;
+    }
+
+    getCurrentTargetInPath() {
+        const step = this.path.steps[this.currentStep];
+        if (!step) return false;
+
+        return {
+            x: step.x + 0.5,
+            y: step.y + 0.5
         }
-
-        //path doesn't need to be calculated otherwise
-        const pathChanged = this.hasPathChanged();
-        if (pathChanged) {
-            this.path.calculate();
-            this.updateEndpoints();
-        }
-        return this.path.steps;
     }
 
-    hasPathChanged() {
-        return (
-            this.prevStartPos.x !== this.path.start.x ||
-            this.prevStartPos.y !== this.path.start.y ||
-            this.prevEndPos.x !== this.path.end.x ||
-            this.prevEndPos.y !== this.path.end.y
-        );
-    }
+    checkIfPathChanged(x, y) {
+        // compare the grid cors to avoid changing for only tiny movements
+        const gridX = Math.floor(x);
+        const gridY = Math.floor(y);
+        const gridEndX = Math.floor(this.path.end.x);
+        const gridEndY = Math.floor(this.path.end.y);
 
-    updateEndpoints() {
-        this.prevStartPos.x = this.path.start.x;
-        this.prevStartPos.y = this.path.start.y;
-
-        this.prevEndPos.x = this.path.end.x;
-        this.prevEndPos.y = this.path.end.y;
+        return gridX !== gridEndX || gridY !== gridEndY;
     }
 }
