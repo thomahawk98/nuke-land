@@ -77,7 +77,7 @@ class Bullet extends Entity {
         } else { // collided with block
             if (collider.type == 'glass') {
                 game.audioManager.playSoundInWorld('Glass Breaking', this.x, this.y);
-                collider.solid = false; // break glass
+                game.world.changeBlockSolidity(this.x, this.y, false); // break glass
             } else {
                 game.audioManager.playSoundInWorld('Bullet Impact', this.x, this.y);
             }

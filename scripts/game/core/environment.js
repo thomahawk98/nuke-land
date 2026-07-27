@@ -15,7 +15,7 @@ class Environment {
         if (!player) return;
 
         const timeOfDay = game.world.getTimeOfDay();
-        const maxAmount = timeOfDay == 'night' ? 100 : 10;
+        const maxAmount = timeOfDay == 'night' ? 300 : 10;
         const enemies = this.objects.filter(a => a.type == 'zombie');
         if (enemies.length < maxAmount) this.spawnNewEnemy(player);
         else if (enemies.length >= maxAmount) this.deleteFurthestEnemy(player, enemies);

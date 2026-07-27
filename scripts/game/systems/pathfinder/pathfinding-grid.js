@@ -107,22 +107,22 @@ class PathfindingGrid {
 
         if (topNeighbor.traversable && leftNeighbor.traversable) {
             const topLeftNeighbor = this.getNodeAt(node.x - 1, node.y - 1, true);
-            if(topLeftNeighbor.traversable) nodes.push(topLeftNeighbor);
+            if (topLeftNeighbor.traversable) nodes.push(topLeftNeighbor);
         }
-        
+
         if (topNeighbor.traversable && rightNeighbor.traversable) {
             const topRightNeighbor = this.getNodeAt(node.x + 1, node.y - 1, true);
-            if(topRightNeighbor.traversable) nodes.push(topRightNeighbor);
+            if (topRightNeighbor.traversable) nodes.push(topRightNeighbor);
         }
 
         if (bottomNeighbor.traversable && leftNeighbor.traversable) {
             const bottomLeftNeighbor = this.getNodeAt(node.x - 1, node.y + 1, true);
-            if(bottomLeftNeighbor.traversable) nodes.push(bottomLeftNeighbor);
+            if (bottomLeftNeighbor.traversable) nodes.push(bottomLeftNeighbor);
         }
-        
+
         if (bottomNeighbor.traversable && rightNeighbor.traversable) {
             const bottomRightNeighbor = this.getNodeAt(node.x + 1, node.y + 1, true);
-            if(bottomRightNeighbor.traversable) nodes.push(bottomRightNeighbor);
+            if (bottomRightNeighbor.traversable) nodes.push(bottomRightNeighbor);
         }
 
         return nodes;
@@ -137,6 +137,7 @@ class PathfindingGrid {
             const visible = user.cam.checkVisibilityOfRect(node.x, node.y);
             if (!visible) continue;
             this.drawNode(node);
+            this.drawNodeCors(node);
         }
 
         //draw border of path nodes
@@ -156,6 +157,14 @@ class PathfindingGrid {
         const bounds = this.getBounds(node, 0.25);
         ctx.fillStyle = !node.traversable ? 'rgb(200,50,50)' : isPath ? 'lime' : 'white';
         ctx.fillRect(...bounds);
+    }
+    
+    drawNodeCors(node) {
+        ctx.fillStyle = 'black';
+        ctx.font = '0.5px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`${node.x},${node.y}`, node.x + 0.5, node.y + 0.5);
     }
 
     drawNodeOutline(node) {
