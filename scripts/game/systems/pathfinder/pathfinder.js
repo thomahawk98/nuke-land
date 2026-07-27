@@ -8,8 +8,12 @@ class PathFinder {
     }
 
     update() {
-        const reachedTarget = this.checkIfReachedCurrentTarget();
-        if (reachedTarget) this.currentStep++;
+        while (this.checkIfReachedCurrentTarget()) {
+            this.currentStep++;
+
+            if (this.currentStep >= this.path.steps.length)
+                break;
+        }
     }
 
     updatePathTo(x, y) {
@@ -21,7 +25,7 @@ class PathFinder {
         if (!pathChanged) return;
 
         this.path.calculate();
-        this.currentStep = 0;
+        this.currentStep = Math.min(1, this.path.steps.length - 1); // prevent angle jittering from facing backwards towards target
     }
 
     getNextStepInPath() {
