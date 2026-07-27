@@ -72,13 +72,14 @@ class Bullet extends Entity {
             collider.move.x += this.move.x * this.knockback;
             collider.move.y += this.move.y * this.knockback;
 
-            game.music.playSound(`Bullet Hit Flesh.mp3`);
+            game.audioManager.playSound('Bullet Hit Flesh');
 
         } else { // collided with block
-            game.music.playSound(`Bullet Impact ${Math.round(Math.random() * 2)}.mp3`);
             if (collider.type == 'glass') {
-                game.music.playSound('Glass Breaking.mp3');
+                game.audioManager.playSound('Glass Breaking');
                 collider.solid = false; // break glass
+            } else {
+                game.audioManager.playSound('Bullet Impact');
             }
         }
 

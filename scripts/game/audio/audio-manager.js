@@ -1,6 +1,6 @@
-class Music {
+class AudioManager {
     constructor() {
-
+        this.activeSounds = [];
     }
 
     init() {
@@ -24,11 +24,12 @@ class Music {
             this.initialized = true;
         }
 
-        // play all the audio
+        // play music
         for (const audio of audios.values()) {
             const MAX_VOLUME = 0.5;
-            if (typeof audio.condition !== 'function') continue;
-            if (audio.condition()) {
+            if (typeof audio.condition !== 'function') continue; // check if the audio is music
+
+            if (audio.condition()) { // music should be playing right now
                 audio.play();
                 audio.volume = Math.min(audio.volume + 0.0025, MAX_VOLUME); // fade in
             } else if (audio.volume > 0) {
@@ -40,13 +41,32 @@ class Music {
         }
     }
 
-    playSound(src, volume = 1) {
-        const music = audios.get(src);
-        if (!music) return console.log('sound', src, 'not found');
+    playSound(name, x, y) {
+        const audio = this.getAudioByName(name);
+        if (!audio) {
+            console.log(`no audio starting with ${name} was found`);
+            return;
+        }
 
-        const clone = music.cloneNode();
-        clone.volume = volume;
+        const clone = audio.cloneNode();
         clone.play();
+    }
+
+    // get a list of audio files starting with name
+    // this allows support for things like noise 0, noise 1, and noise 2 to be called by playSound('noise');
+    // problems could arise if another file is named something like noise zombie 5, so hopefully dont do that
+    getAudioByName(name) {
+        const matches = [];
+
+        for (const [audioName, audio] of audios) {
+            if (audioName.startsWith(name)) {
+                matches.push(audio);
+            }
+        }
+
+        if (matches.length === 0) return null;
+
+        return matches[Math.floor(Math.random() * matches.length)];
     }
 
     playMusic(src, condition) {

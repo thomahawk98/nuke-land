@@ -2,11 +2,13 @@ class Game {
     constructor() {
         this.t = 0;
         this.page = 'audio check';
-        this.world = new World();
-        this.menu = new Menu();
-        this.music = new Music();
+        
         this.debug = false;
         this.lastUpdate = performance.now();
+
+        this.world = new World();
+        this.menu = new Menu();
+        this.audioManager = new AudioManager();
     }
 
     tick() {
@@ -32,7 +34,7 @@ class Game {
             this.gameOverMenu.update();
         }
 
-        if (this.page !== 'audio check') this.music.update();
+        if (this.page !== 'audio check') this.audioManager.update();
     };
 
     reset() {

@@ -34,9 +34,9 @@ const sources = {
         'Bullet Hit Flesh.mp3',
         'Axe Hit Flesh 0.mp3', 'Axe Hit Flesh 1.mp3',
         'Machete Hit Flesh 0.mp3', 'Machete Hit Flesh 1.mp3',
-        'Bat Hit Flesh.mp3',
+        'Thud Against Flesh.mp3',
         'Whoosh.mp3',
-        'Zombie 0.mp3', 'Zombie 1.mp3', 'Zombie 2.mp3', 'Zombie 3.mp3', 'Zombie 4.mp3', 'Zombie 5.mp3', 'Zombie 6.mp3', 'Zombie 7.mp3',
+        'Zombie 0.mp3', 'Zombie 1.mp3', 'Zombie 2.mp3', 'Zombie 3.mp3', 'Zombie 4.mp3', 'Zombie 5.mp3', 'Zombie 6.mp3',
     ],
     fonts: [
         'super-crawler.ttf'

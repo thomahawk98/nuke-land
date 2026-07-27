@@ -12,10 +12,13 @@ class Button {
 
     update() {
         const hovered = user.mouse.inBox(this.x - this.w * 0.5, this.y - this.h * 0.5, this.w, this.h);
-        if (!this.hovered && hovered) game.music.playSound('Hover.mp3');
+        if (!this.hovered && hovered) game.audioManager.playSound('Hover');
         this.hovered = hovered;
 
-        if (this.hovered && user.mouse.left.click) this.onclick();
+        if (this.hovered && user.mouse.left.click) {
+            game.audioManager.playSound('Click');
+            this.onclick();
+        }
     }
 
     draw() {

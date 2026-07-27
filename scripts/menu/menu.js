@@ -19,7 +19,6 @@ class Menu {
         this.buttons = [
             new Button(500, 500, 300, 100, 'Play', () => {
                 game.page = 'game';
-                game.music.playSound('Click.mp3');
                 game.t = 0;
             }),
         ]
