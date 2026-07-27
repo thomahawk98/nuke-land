@@ -14,6 +14,11 @@ class PathFinder {
             if (this.currentStep >= this.path.steps.length)
                 break;
         }
+
+        // delete the path from pathfinding grid
+        if(this.object.delete) {
+            this.grid.paths = this.grid.paths.filter(a => a !== this.path);
+        }
     }
 
     updatePathTo(x, y) {

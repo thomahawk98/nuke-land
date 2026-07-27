@@ -1,6 +1,7 @@
 class AudioManager {
     constructor() {
         this.activeSoundsInWorld = [];
+        this.ctx = new AudioContext();
     }
 
     init() {
@@ -10,11 +11,11 @@ class AudioManager {
         });
         this.playMusic('Day By Day.mp3', () => {
             const timeOfDay = game.world.getTimeOfDay();
-            return game.page == 'game' && timeOfDay !== 'night';
+            return game.page == 'game' && timeOfDay !== 'night' && !game.gameOver;
         });
         this.playMusic('Midnight Ballad.mp3', () => {
             const timeOfDay = game.world.getTimeOfDay();
-            return game.page == 'game' && timeOfDay == 'night';
+            return game.page == 'game' && timeOfDay == 'night' && !game.gameOver;
         });
     }
 
@@ -47,7 +48,7 @@ class AudioManager {
             const dist = Math.distTo(sound.x, sound.y, user.cam.x, user.cam.y);
             if (dist == 0) {
                 sound.volume = 1;
-                return;
+                continue;
             }
 
             const HEARING_RANGE = 40;

@@ -113,7 +113,11 @@ class Player extends Entity {
     }
 
     shootGun(item) {
-        if (item.ammo <= 0) return;
+        if (item.ammo <= 0) {
+            if (item.type == 'pistol') game.audioManager.playSound('Pistol Empty');
+            if (item.type == 'shotgun') game.audioManager.playSound('Shotgun Empty');
+            return;
+        }
 
         const world = this.user.getMouseWorldCors();
         const angle = Math.dirTo(this.x, this.y, world.x, world.y);
@@ -134,6 +138,13 @@ class Player extends Entity {
 
         item.ammo--;
         this.reload = item.maxRangedReload;
+
+        if (item.type == 'pistol') game.audioManager.playSound('Pistol Firing');
+        else if (item.type == 'shotgun') {
+            game.audioManager.playSound('Shotgun Firing');
+            game.audioManager.playSound('Shotgun Reloading');
+        }
+        else game.audioManager.playSound('Gun Firing');
     }
 
     eat(item) {

@@ -19,7 +19,7 @@ class Bullet extends Entity {
         this.damage = data.bulletDamage;
         this.knockback = data.bulletKnockback;
 
-        this.decay = 500;
+        this.decay = 100;
         this.friction = 0;
         this.radius = 0.25;
 
