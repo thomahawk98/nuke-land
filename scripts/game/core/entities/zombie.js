@@ -39,7 +39,7 @@ class Zombie extends Entity {
         if (enemiesInRange.length !== 0) this.performMeleAttack();
 
         if (Math.random() < 0.00025) {
-            game.audioManager.playSound('Zombie');
+            game.audioManager.playSoundInWorld('Zombie', this.x, this.y);
         }
 
         this.pathFinder.update();

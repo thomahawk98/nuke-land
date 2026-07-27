@@ -19,7 +19,7 @@ class Bullet extends Entity {
         this.damage = data.bulletDamage;
         this.knockback = data.bulletKnockback;
 
-        this.decay = 50;
+        this.decay = 500;
         this.friction = 0;
         this.radius = 0.25;
 
@@ -72,14 +72,14 @@ class Bullet extends Entity {
             collider.move.x += this.move.x * this.knockback;
             collider.move.y += this.move.y * this.knockback;
 
-            game.audioManager.playSound('Bullet Hit Flesh');
+            game.audioManager.playSoundInWorld('Bullet Hit Flesh', this.x, this.y);
 
         } else { // collided with block
             if (collider.type == 'glass') {
-                game.audioManager.playSound('Glass Breaking');
+                game.audioManager.playSoundInWorld('Glass Breaking', this.x, this.y);
                 collider.solid = false; // break glass
             } else {
-                game.audioManager.playSound('Bullet Impact');
+                game.audioManager.playSoundInWorld('Bullet Impact', this.x, this.y);
             }
         }
 

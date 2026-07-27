@@ -1,6 +1,6 @@
 class AudioManager {
     constructor() {
-        this.activeSounds = [];
+        this.activeSoundsInWorld = [];
     }
 
     init() {
@@ -39,9 +39,23 @@ class AudioManager {
                 audio.pause();
             }
         }
+
+        // update world sounds
+        for (const sound of this.activeSoundsInWorld) {
+
+            // scale sound volume by distance to camera
+            const dist = Math.distTo(sound.x, sound.y, user.cam.x, user.cam.y);
+            if (dist == 0) {
+                sound.volume = 1;
+                return;
+            }
+
+            const HEARING_RANGE = 40;
+            sound.volume = Math.clamp01(1 - (dist / HEARING_RANGE));
+        }
     }
 
-    playSound(name, x, y) {
+    playSound(name) {
         const audio = this.getAudioByName(name);
         if (!audio) {
             console.log(`no audio starting with ${name} was found`);
@@ -50,6 +64,16 @@ class AudioManager {
 
         const clone = audio.cloneNode();
         clone.play();
+
+        return clone;
+    }
+
+    playSoundInWorld(name, x, y) {
+        const audioClone = this.playSound(name);
+        audioClone.x = x;
+        audioClone.y = y;
+
+        this.activeSoundsInWorld.push(audioClone);
     }
 
     // get a list of audio files starting with name

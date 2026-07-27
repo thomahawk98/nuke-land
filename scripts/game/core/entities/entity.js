@@ -151,13 +151,13 @@ class Entity {
 
     playAttackSound(item, hit) {
         if (!hit) {
-            game.audioManager.playSound('Whoosh');
+            game.audioManager.playSoundInWorld('Whoosh', this.x, this.y);
             return;
         }
         
-        if (item.type == 'axe') game.audioManager.playSound('Axe Hit Flesh');
-        else if (item.type == 'machete') game.audioManager.playSound('Machete Hit Flesh');
-        else game.audioManager.playSound('Thud Against Flesh');
+        if (item.type == 'axe') game.audioManager.playSoundInWorld('Axe Hit Flesh', this.x, this.y);
+        else if (item.type == 'machete') game.audioManager.playSoundInWorld('Machete Hit Flesh', this.x, this.y);
+        else game.audioManager.playSoundInWorld('Thud Against Flesh', this.x, this.y);
     }
 
     getEnemiesInMeleAttackRange(item) {
