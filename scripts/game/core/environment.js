@@ -1,6 +1,20 @@
 class Environment {
     constructor() {
         this.objects = [];
+        this.AMOUNT_OF_ZOMBIES_DAY = 5;
+        this.AMOUNT_OF_ZOMBIES_NIGHT = 300;
+    }
+
+    reset() {
+        this.objects = [];
+        this.objects.push(new Player(user, 0, 0));
+
+        const amount = 0;
+        for (let n = 0; n < amount; n++) {
+            const angle = 360 / amount * n;
+            const { x, y } = Math.distToMove(40, angle);
+            this.objects.push(new Zombie(x, y));
+        }
     }
 
     update() {
@@ -15,7 +29,7 @@ class Environment {
         if (!player) return;
 
         const timeOfDay = game.world.getTimeOfDay();
-        const maxAmount = timeOfDay == 'night' ? 300 : 10;
+        const maxAmount = timeOfDay == 'night' ? this.AMOUNT_OF_ZOMBIES_NIGHT : this.AMOUNT_OF_ZOMBIES_DAY;
         const enemies = this.objects.filter(a => a.type == 'zombie');
         if (enemies.length < maxAmount) this.spawnNewEnemy(player);
         else if (enemies.length >= maxAmount) this.deleteFurthestEnemy(player, enemies);

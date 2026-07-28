@@ -18,7 +18,7 @@ class Zombie extends Entity {
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 
-        this.pathFinder = new PathFinder(this, game.world.pathfindingGrid);
+        this.pathFinder = new PathFinder(this, game.world.pathfindingManager);
     }
 
     update() {

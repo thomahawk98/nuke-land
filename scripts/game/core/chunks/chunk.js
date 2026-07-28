@@ -6,6 +6,7 @@ class Chunk {
         this.SIZE = SIZE;
 
         this.blocks = Array(SIZE * SIZE).fill(false);
+        this.traversable = Array(SIZE * SIZE).fill(false);
     }
 
     updateBlockLighting() {
@@ -42,14 +43,18 @@ class Chunk {
 
         const index = this.getBlockIndex(x, y);
         this.blocks[index] = block;
+        this.traversable[index] = !block.solid; // update this chunks pathfinding node
 
+        /*
         // update the pathfinding grid when a new block is placed
         const { x: wx, y: wy } = this.localToWorldCors(block.x, block.y);
         const node = game.world.pathfindingGrid.getNodeAt(wx, wy);
         if (node == undefined) return;
-        
+
         game.world.pathfindingGrid.generateNodeAt(wx, wy);
+        */
     }
+
 
     getBlock(lx, ly) {
         if (lx < 0 || lx > this.SIZE || ly < 0 || ly > this.SIZE)
@@ -65,7 +70,10 @@ class Chunk {
 
     draw() {
         this.drawBlocks();
-        if (game.debug) this.drawDebugOutline();
+        if (game.debug) {
+            this.drawDebugOutline();
+            this.drawTraversableBlocks();
+        }
     }
 
     drawBlocks() {
@@ -135,5 +143,21 @@ class Chunk {
         ctx.strokeStyle = color;
         ctx.lineWidth = 0.1;
         ctx.strokeRect(BORDER_SIZE, BORDER_SIZE, this.SIZE - BORDER_SIZE * 2, this.SIZE - BORDER_SIZE * 2);
+    }
+
+    drawTraversableBlocks() {
+        for (let x = 0; x < this.SIZE; x++) {
+            for (let y = 0; y < this.SIZE; y++) {
+                const { x: wx, y: wy } = this.localToWorldCors(x, y);
+                const visibleToCam = user.cam.checkVisibilityOfRect(wx, wy);
+                if (!visibleToCam) continue;
+
+                const index = x + y * this.SIZE;
+                const traversable = this.traversable[index];
+
+                ctx.fillStyle = traversable ? 'rgba(255,255,255,0.5)' : 'rgba(255,0,0,0.5)';
+                ctx.fillRect(x + 0.2, y + 0.2, 0.6, 0.6);
+            }
+        }
     }
 }

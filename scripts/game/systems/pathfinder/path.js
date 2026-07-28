@@ -1,12 +1,13 @@
 class Path {
-    constructor(grid, start, end) {
-        this.grid = grid;
-        this.start = start;
-        this.end = end;
+    constructor(object, manager) {
+        this.object = object;
+        this.manager = manager;
+
+        this.start = { x: null, y: null };
+        this.end = { x: null, y: null };
+
         this.steps = [];
         this.searchData = new Map();
-
-        this.grid.paths.push(this);
     }
 
     getData(node) {
@@ -28,28 +29,25 @@ class Path {
 
     calculate(maxDepth = 50) {
         this.searchData.clear();
+
+        this.start.x = this.object.x;
+        this.start.y = this.object.y;
+
         const closestNodeToEnd = this.searchForPath(maxDepth);
         this.steps = this.decompileStepsFromNodeParents(closestNodeToEnd);
     }
 
     searchForPath(maxDepth) {
-        this.startNode = this.grid.getNodeAt(this.start.x, this.start.y, true);
-        this.endNode = this.grid.getNodeAt(this.end.x, this.end.y, true);
-
+        this.startNode = this.manager.getNodeAt(this.start.x, this.start.y, true);
+        this.endNode = this.manager.getNodeAt(this.end.x, this.end.y, true);
         if (!this.startNode || !this.endNode) return console.error('here');
+        if (!this.startNode.traversable || !this.endNode.traversable) return this.startNode; // path is completely blocked, don't bother checking
 
         // set costs of start node
-        const distanceFromStartToEnd = this.getAbsoluteDistanceCost(this.startNode, this.endNode);
-        const data = {
-            distanceToStartCost: 0,
-            distanceToEndCost: distanceFromStartToEnd,
-            totalCost: distanceFromStartToEnd,
-            parent: null
-        }
-        this.searchData.set(this.startNode, data);
+        this.setStartNodeData();
 
         const uncheckedNodes = new Set([this.startNode]); // nodes that haven't been checked yet and need to be checked
-        const checkedNodes = new Set(); // nodes that have been check (and aren't the target node)
+        const checkedNodes = new Set(); // nodes that have been checked (and aren't the target node)
 
         // make sure to not go over the search depth
         for (let i = 0; i < maxDepth; i++) {
@@ -62,24 +60,50 @@ class Path {
         }
 
         //the end node was not found, could be too far away or obstructed
-        //console.log(`no path found between (${this.start.x},${this.start.y}) and (${this.end.x},${this.end.y})`);
+        return this.getClosestNodeToEnd(checkedNodes);
+    }
 
-        //find closest node on path
-        let closest = null;
-        let closestDistance = Infinity;
-        for (const node of checkedNodes) {
-            const data = this.getData(node);
-            if (data.distanceToEndCost > closestDistance) continue;
-
-            closest = node;
-            closestDistance = data.distanceToEndCost;
+    setStartNodeData() {
+        const distanceFromStartToEnd = this.getAbsoluteDistanceCost(this.startNode, this.endNode);
+        const data = {
+            distanceToStartCost: 0,
+            distanceToEndCost: distanceFromStartToEnd,
+            totalCost: distanceFromStartToEnd,
+            parent: null
         }
-        return closest;
+        this.searchData.set(this.startNode, data);
+    }
+
+    getLowestCostNode(nodes) {
+        let bestNode = null;
+        let bestData = {
+            totalCost: Infinity,
+        };
+        for (const node of nodes) {
+            const data = this.getData(node);
+
+            if (!bestNode) {
+                bestNode = node;
+                bestData = data;
+                continue;
+            }
+
+
+            if (
+                data.totalCost < bestData.totalCost ||
+                (data.totalCost === bestData.totalCost && data.distanceToEndCost < bestData.distanceToEndCost)
+            ) {
+                bestNode = node;
+                bestData = data;
+            }
+        }
+
+        return bestNode;
     }
 
     searchCurrentNode(current, uncheckedNodes, checkedNodes) {
         //find all the neighbors
-        const traversableNeighbors = this.grid.getTraversableNeighborsOfNode(current);
+        const traversableNeighbors = this.manager.getTraversableNeighborsOfNode(current);
         for (const o of traversableNeighbors) {
             this.checkNeighborNode(o, current, uncheckedNodes, checkedNodes);
         }
@@ -112,31 +136,18 @@ class Path {
         this.searchData.set(o, data);
     }
 
-    getLowestCostNode(nodes) {
-        let bestNode = null;
-        let bestData = {
-            totalCost: Infinity,
-        };
-        for (const node of nodes) {
+    getClosestNodeToEnd(checkedNodes) {
+        //find closest node on path
+        let closest = null;
+        let closestDistance = Infinity;
+        for (const node of checkedNodes) {
             const data = this.getData(node);
+            if (data.distanceToEndCost > closestDistance) continue;
 
-            if (!bestNode) {
-                bestNode = node;
-                bestData = data;
-                continue;
-            }
-
-
-            if (
-                data.totalCost < bestData.totalCost ||
-                (data.totalCost === bestData.totalCost && data.distanceToEndCost < bestData.distanceToEndCost)
-            ) {
-                bestNode = node;
-                bestData = data;
-            }
+            closest = node;
+            closestDistance = data.distanceToEndCost;
         }
-
-        return bestNode;
+        return closest;
     }
 
     getCostsFromParent(node, parent) {

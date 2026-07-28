@@ -12,7 +12,7 @@ class World {
         this.seed = Math.round(Math.random() * 10000);
         this.chunkManager = new ChunkManager(this.seed);
         this.structureManager = new StructureManager(this.seed);
-        this.pathfindingGrid = new PathfindingGrid();
+        this.pathfindingManager = new PathfindingManager();
         this.env = new Environment();
     }
 
@@ -20,7 +20,7 @@ class World {
         this.updateDaylight();
         this.chunkManager.update();
         this.structureManager.update();
-        this.pathfindingGrid.update();
+        this.pathfindingManager.update();
         this.env.update();
     }
 
@@ -70,17 +70,7 @@ class World {
     }
 
     reset() {
-        const objects = [];
-        objects.push(new Player(user, 0, 0));
-
-        const amount = 0;
-        for (let n = 0; n < amount; n++) {
-            const angle = 360 / amount * n;
-            const { x, y } = Math.distToMove(25, angle);
-            objects.push(new Zombie(x, y));
-        }
-
-        this.env.objects = [...objects];
+        this.env.reset();
     }
 
     getSolidityAt(x, y) {
@@ -112,6 +102,6 @@ class World {
         this.chunkManager.draw();
         this.structureManager.draw();
         this.env.draw();
-        this.pathfindingGrid.draw();
+        if(game.debug) this.pathfindingManager.draw();
     }
 }

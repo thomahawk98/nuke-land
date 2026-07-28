@@ -1,23 +1,18 @@
 class PathFinder {
-    constructor(object, grid) {
+    constructor(object, manager) {
         this.object = object;
-        this.grid = grid;
 
         this.currentStep = 0;
-        this.path = new Path(grid, object, object);
+        this.path = new Path(object, manager);
+
+        manager.paths.push(this.path);
     }
 
     update() {
         while (this.checkIfReachedCurrentTarget()) {
             this.currentStep++;
 
-            if (this.currentStep >= this.path.steps.length)
-                break;
-        }
-
-        // delete the path from pathfinding grid
-        if(this.object.delete) {
-            this.grid.paths = this.grid.paths.filter(a => a !== this.path);
+            if (this.currentStep >= this.path.steps.length) break;
         }
     }
 
