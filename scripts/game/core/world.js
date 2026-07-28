@@ -95,17 +95,6 @@ class World {
         return this.chunkManager.setBlock(x, y, block);
     }
 
-    changeBlockSolidity(x, y, solidity) {
-        const block = this.getBlock(x, y);
-        block.solid = solidity;
-
-        const node = this.pathfindingGrid.getNodeAt(x, y);
-        //console.log(block.x, block.y, node);
-        if(!node) return;
-
-        node.traversable = !solidity;
-    }
-
     getBlocksInRectangle(_x, _y, w, h) {
         const x1 = Math.floor(_x), y1 = Math.floor(_y);
         const x2 = Math.floor(_x + w), y2 = Math.floor(_y + h);

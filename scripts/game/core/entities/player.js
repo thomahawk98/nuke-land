@@ -85,8 +85,8 @@ class Player extends Entity {
                     const dist = Math.distTo(0, 0, x, y);
                     if (dist > RANGE) continue;
 
-                    const solidity = !block.solid;
-                    game.world.changeBlockSolidity(this.x + x, this.y + y, solidity);
+                    block.solid = !block.solid;
+                    game.world.setBlock(this.x + x, this.y + y, block);
                 }
             }
         }

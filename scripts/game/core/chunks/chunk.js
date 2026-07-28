@@ -44,9 +44,11 @@ class Chunk {
         this.blocks[index] = block;
 
         // update the pathfinding grid when a new block is placed
-        const node = game.world.pathfindingGrid.getNodeAt(block.x, block.y);
-        if (!node) return;
-        node.traverable = !block.solid;
+        const { x: wx, y: wy } = this.localToWorldCors(block.x, block.y);
+        const node = game.world.pathfindingGrid.getNodeAt(wx, wy);
+        if (node == undefined) return;
+        
+        game.world.pathfindingGrid.generateNodeAt(wx, wy);
     }
 
     getBlock(lx, ly) {
