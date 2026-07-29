@@ -85,7 +85,7 @@ class Entity {
     }
 
     checkIfCollidingWithVoxel(x = this.x, y = this.y) {
-        const w = 0.9, h = 0.9;
+        const w = 0.75, h = 0.75;
         const bounds = [x - w * 0.5, y - h * 0.5, w, h];
         const blocks = game.world.getBlocksInRectangle(...bounds);
         for (const block of blocks) {
