@@ -1,14 +1,7 @@
 class Item {
-    constructor(type, data, count = 1, inventory = true) {
+    constructor(type, count = 1) {
         this.type = type;
         this.count = count;
-
-        if (inventory) {
-            this.slot = data.slot;
-        } else {
-            this.x = data.x;
-            this.y = data.y;
-        }
 
         const stats = Item.getStatsForType(type);
         for (const [key, value] of Object.entries(stats)) {

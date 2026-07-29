@@ -168,8 +168,10 @@ class InventoryManager {
     }
 
     getBestIndexForItemInInventory(inventory, item) {
+        // this code is all dumb and old because of the new slot system
+        /*
         // compile a list of available slots
-        const takenSlots = inventory.items.filter(o => !inventory.itemsMergable(o, item)).map(a => a = a.slot); // indexes occupied by other unmergable items
+        const takenSlots = inventory.items.filter(o => !inventory.itemsMergeable(o, item)).map(a => a = a.slot); // indexes occupied by other unmergeable items
         let availableSlots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].filter(a => !takenSlots.includes(a));
 
         //remove the slots in the same row as the item if empty slots in other rows exist
@@ -191,10 +193,11 @@ class InventoryManager {
         // choose combining with another item over jumping to a new slot
         const slots = availableMerges.length > 0 ? availableMerges : availableSlots;
         return slots[0]; // this is the best slot in this inventory for this item
+        */
     };
 
     tryCombining(o1, o2) {
-        if (this.itemsMergable(o1, o2)) {
+        if (this.itemsMergeable(o1, o2)) {
             this.mergeItems(o1, o2);
             return true;
         } else if (this.canBeLoaded(o1, o2)) {
@@ -204,14 +207,13 @@ class InventoryManager {
         return false;
     };
 
-    itemsMergable(o1, o2) {
+    itemsMergeable(o1, o2) {
         return (
             o1 && o2 &&
             o1.type == o2.type &&
             o1.subtype == o2.subtype &&
-            o1.slot !== o2.slot &&
             o1.count < Item.getMaxStackSizeForType(o1.type)
-        )
+        );
     };
 
     mergeItems(item1, item2) { // this is the same function as load ammo?!?

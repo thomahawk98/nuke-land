@@ -5,14 +5,13 @@ class Player extends Entity {
         this.type = 'player';
 
         this.inventory = new Inventory(this, 4, 3);
+        this.inventory.items[0] = new Item('machete');
+        this.inventory.items[1] = new Item('food', 4);
         /*
-        this.inventory.items[0] = new Item('machete', { slot: 0 });
-        this.inventory.items[1] = new Item('food', { slot: 1 }, 4);
-        */
-        const gun = new Item('pistol', { slot: 0 });
-        gun.ammo = Infinity;
-        this.inventory.items[0] = gun;
-        //this.inventory.items[1] = new Item('ammo', { slot: 1 }, 4);
+         const gun = new Item('pistol');
+         gun.ammo = Infinity;
+         this.inventory.items[0] = gun;
+         */
 
 
         this.GENERATION_DISTANCE = 5;
@@ -95,7 +94,7 @@ class Player extends Entity {
             const item = this.inventory.getSelectedItem();
             if (item.type == 'pistol' || item.type == 'shotgun') {
                 const ammo = this.inventory.items.find(a => a.type == 'ammo' && a.subtype == item.type);
-                if(ammo) {
+                if (ammo) {
                     const amount = Math.min(ammo.count, item.maxAmmo - item.ammo);
                     item.ammo += amount;
                     ammo.count -= amount;

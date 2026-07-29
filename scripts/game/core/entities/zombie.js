@@ -107,8 +107,8 @@ class Zombie extends Entity {
     takeDamage(amount) {
         if (this.invincibility > 0) return; // can't be damaged
         this.health -= amount;
-        this.invincibility = 50; // 0.5s of invincibility after taking damage
         this.randomTimeUntilSound = 0; // make a noise after being hurt
+        // zombies don't take invincibility
     }
 
     isEnemy(o) {

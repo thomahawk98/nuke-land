@@ -20,7 +20,7 @@ function generateChestContents(amount, lootPool = 'test chest') {
         const count = Math.ceil(Math.random() * option.maxCount);
 
         // set item
-        const item = new Item(type, { slot: n }, count);
+        const item = new Item(type, count);
         if (option.subtype) item.subtype = option.subtype;
         contents[n] = item;
     }
