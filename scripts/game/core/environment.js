@@ -143,28 +143,26 @@ class Environment {
                 continue;
             }
 
-            //const visible = game.getPlayer().isObjectVisible(o);
-            //if (!visible) continue;//ctx.globalAlpha = 0.25;
-            const block = game.world.getBlock(o.x, o.y);
-            ctx.globalAlpha = block.light - 0.1;
-
             // translate to object position
             ctx.save();
             ctx.translate(o.x, o.y);
 
-            ctx.save();
-            if (o.angle) ctx.rotate(o.angle * Math.PI / 180);
+            const block = game.world.getBlock(o.x, o.y);
+            ctx.globalAlpha = block.light - 0.1;
 
             // draw object
+            ctx.save();
+            if (o.angle) ctx.rotate(o.angle * Math.PI / 180);
             o.draw();
-
             ctx.restore();
 
+            // draw healthbar
             o.drawHealthbar();
+            ctx.globalAlpha = 1;
 
+            o.drawHitbox();
             ctx.restore();
 
-            ctx.globalAlpha = 1;
         }
     }
 }

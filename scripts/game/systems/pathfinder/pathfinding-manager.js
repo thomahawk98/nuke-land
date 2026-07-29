@@ -73,6 +73,8 @@ class PathfindingManager {
     }
 
     draw() {
+        if(!game.debug.enabled || !game.debug.showPathfindingGrid) return;
+        
         for (const path of this.paths) {
             for (const step of path.steps) {
                 ctx.fillStyle = 'rgba(0,225,0,0.5)';

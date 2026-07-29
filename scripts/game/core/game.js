@@ -3,7 +3,8 @@ class Game {
         this.t = 0;
         this.page = 'audio check';
 
-        this.debug = false;
+        this.debug = new Debug();
+
         this.lastUpdate = performance.now();
 
         this.world = new World();
@@ -34,6 +35,7 @@ class Game {
 
             this.gameOverMenu.update();
             this.FPSTracker.update();
+            this.debug.controlMenu.update();
         }
 
         if (this.page !== 'audio check') this.audioManager.update();
@@ -61,6 +63,7 @@ class Game {
 
             this.gameOverMenu.draw();
             this.FPSTracker.draw();
+            this.debug.controlMenu.draw();
         }
     };
 

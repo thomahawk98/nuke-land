@@ -48,7 +48,7 @@ class StructureManager {
     }
 
     draw() {
-        if (!game.debug) return false;
+        if (!game.debug.enabled || !game.debug.showStructureCenters) return false;
         for (const structure of this.structures) {
             ctx.fillStyle = 'red';
             ctx.fillCirc(structure.x, structure.y, 0.5);

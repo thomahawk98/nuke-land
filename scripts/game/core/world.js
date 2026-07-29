@@ -101,7 +101,7 @@ class World {
     draw() {
         this.chunkManager.draw();
         this.structureManager.draw();
+        this.pathfindingManager.draw();
         this.env.draw();
-        if(game.debug) this.pathfindingManager.draw();
     }
 }

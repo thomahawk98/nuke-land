@@ -32,7 +32,7 @@ class User {
         }
 
         if(this.keys.up['Control']) {
-            game.debug = !game.debug;
+            game.debug.enabled = !game.debug.enabled;
         }
 
         // pass controls onto player or inventory manager depending on if an inventory is open

@@ -22,6 +22,9 @@ class Bullet extends Entity {
         this.decay = 100;
         this.friction = 0;
         this.radius = 0.25;
+        
+        this.w = this.radius * 2;
+        this.h = this.radius * 2;
 
         delete this.invincibility;
         delete this.accel;
@@ -30,8 +33,6 @@ class Bullet extends Entity {
         delete this.angleOfAttack;
         delete this.meleReload;
         delete this.maxMeleReload;
-        delete this.w;
-        delete this.h;
     }
 
     update() {

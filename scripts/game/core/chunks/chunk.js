@@ -70,9 +70,9 @@ class Chunk {
 
     draw() {
         this.drawBlocks();
-        if (game.debug) {
-            this.drawDebugOutline();
-            this.drawTraversableBlocks();
+        if (game.debug.enabled) {
+            if(game.debug.showChunkBorders) this.drawOutline();
+            if(game.debug.showPathfindingGrid) this.drawTraversableBlocks();
         }
     }
 
@@ -136,7 +136,7 @@ class Chunk {
         }
     }
 
-    drawDebugOutline() {
+    drawOutline() {
         const BORDER_SIZE = 0.1;
 
         const color = !this.generated ? 'rgb(255,0,0)' : (this.cx + this.cy) % 2 == 0 ? 'rgb(0,100,255)' : 'rgb(0,200,0)';

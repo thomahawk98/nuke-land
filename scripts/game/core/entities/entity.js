@@ -96,34 +96,6 @@ class Entity {
         return false;
     }
 
-    drawHealthbar(x = 0, y = -0.75, size = 1) {
-        if (this.health == this.maxHealth) return;
-        if (this.invincibility % 25 > 12.5) return;
-
-        const percent = Math.clamp01(this.health / this.maxHealth);
-        ctx.save();
-        ctx.translate(x, y);
-
-        ctx.lineWidth = 0.25;
-        ctx.lineCap = 'round';
-
-        ctx.strokeStyle = 'rgb(0,100,0)';
-        ctx.beginPath();
-        ctx.moveTo(-size * 0.5, 0);
-        ctx.lineTo(size * 0.5, 0);
-        ctx.stroke();
-
-        if (percent !== 0) {
-            ctx.strokeStyle = 'rgb(0,255,0)';
-            ctx.beginPath();
-            ctx.moveTo(-size * 0.5, 0);
-            ctx.lineTo(-size * 0.5 + size * percent, 0);
-            ctx.stroke();
-        }
-
-        ctx.restore();
-    }
-
     performMeleAttack(item) {
         if (!item) item = {
             type: 'fists',
@@ -192,5 +164,41 @@ class Entity {
         const x = Math.floor(this.x);
         const y = Math.floor(this.y);
         return x !== Math.floor(this.prevX) || y !== Math.floor(this.prevY);
+    }
+
+    drawHealthbar(x = 0, y = -0.75, size = 1) {
+        if (this.health == this.maxHealth) return;
+        if (this.invincibility % 25 > 12.5) return;
+
+        const percent = Math.clamp01(this.health / this.maxHealth);
+        ctx.save();
+        ctx.translate(x, y);
+
+        ctx.lineWidth = 0.25;
+        ctx.lineCap = 'round';
+
+        ctx.strokeStyle = 'rgb(0,100,0)';
+        ctx.beginPath();
+        ctx.moveTo(-size * 0.5, 0);
+        ctx.lineTo(size * 0.5, 0);
+        ctx.stroke();
+
+        if (percent !== 0) {
+            ctx.strokeStyle = 'rgb(0,255,0)';
+            ctx.beginPath();
+            ctx.moveTo(-size * 0.5, 0);
+            ctx.lineTo(-size * 0.5 + size * percent, 0);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    drawHitbox() {
+        if(!game.debug.enabled || !game.debug.showEntityHitboxes) return;
+
+        ctx.strokeStyle = 'cyan';
+        ctx.lineWidth = 0.1;
+        ctx.strokeRect(-this.w * 0.5, -this.h * 0.5, this.w, this.h);
     }
 }
