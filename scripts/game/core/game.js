@@ -2,20 +2,21 @@ class Game {
     constructor() {
         this.t = 0;
         this.page = 'audio check';
-        
+
         this.debug = false;
         this.lastUpdate = performance.now();
 
         this.world = new World();
         this.menu = new Menu();
         this.audioManager = new AudioManager();
+        this.FPSTracker = new FPSTracker();
     }
 
     tick() {
         const now = performance.now();
-        const difference = now - this.lastUpdate;
+        const difference = (now - this.lastUpdate) * 0.1;
         this.lastUpdate = now;
-        this.t += difference * 0.1;
+        this.t += difference;
 
         this.update();
         this.draw();
@@ -32,6 +33,7 @@ class Game {
             this.world.update();
 
             this.gameOverMenu.update();
+            this.FPSTracker.update();
         }
 
         if (this.page !== 'audio check') this.audioManager.update();
@@ -42,7 +44,7 @@ class Game {
         this.gameOver = false;
         this.gameOverMenu.animation = 0;
         delete this.timeAtGameFinish;
-        
+
         this.world.reset();
     }
 
@@ -58,6 +60,7 @@ class Game {
             ctx.restore();
 
             this.gameOverMenu.draw();
+            this.FPSTracker.draw();
         }
     };
 
