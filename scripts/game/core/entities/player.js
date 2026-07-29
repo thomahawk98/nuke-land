@@ -91,6 +91,18 @@ class Player extends Entity {
             }
         }
 
+        if (this.user.keys.up['r']) {
+            const item = this.inventory.getSelectedItem();
+            if (item.type == 'pistol' || item.type == 'shotgun') {
+                const ammo = this.inventory.items.find(a => a.type == 'ammo' && a.subtype == item.type);
+                if(ammo) {
+                    const amount = Math.min(ammo.count, item.maxAmmo - item.ammo);
+                    item.ammo += amount;
+                    ammo.count -= amount;
+                }
+            }
+        }
+
         if (this.user.mouse.left.click) {
             this.attackWithItem();
         }

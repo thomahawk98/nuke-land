@@ -45,7 +45,7 @@ class Inventory {
             if (!item) continue;
             item.update();
 
-            if(item.delete) this.items[n] = false;
+            if(item.delete || item.count <= 0) this.items[n] = false;
         }
     }
 
