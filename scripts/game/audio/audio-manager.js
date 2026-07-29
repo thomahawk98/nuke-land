@@ -1,5 +1,6 @@
 class AudioManager {
     constructor() {
+        this.audioEnabled = false;
         this.activeSoundsInWorld = [];
         this.ctx = new AudioContext();
     }
@@ -20,6 +21,9 @@ class AudioManager {
     }
 
     update() {
+        if (user.mouse.left.click) this.audioEnabled = true;
+        if (!this.audioEnabled) return;
+
         if (!this.initialized) {
             this.init();
             this.initialized = true;
@@ -43,6 +47,15 @@ class AudioManager {
 
         // update world sounds
         for (const sound of this.activeSoundsInWorld) {
+            if (sound.object) {
+                if (sound.object.delete) {
+                    sound.pause();
+                    sound.delete = true;
+                    continue;
+                }
+                sound.x = sound.object.x;
+                sound.y = sound.object.y;
+            }
 
             // scale sound volume by distance to camera
             const dist = Math.distTo(sound.x, sound.y, user.cam.x, user.cam.y);
@@ -53,7 +66,7 @@ class AudioManager {
 
             const HEARING_RANGE = 40;
             sound.volume = Math.clamp01(1 - (dist / HEARING_RANGE));
-            if(sound.ended) sound.delete = true;
+            if (sound.ended) sound.delete = true;
         }
 
         this.activeSoundsInWorld = this.activeSoundsInWorld.filter(a => !a.delete);
@@ -72,12 +85,15 @@ class AudioManager {
         return clone;
     }
 
-    playSoundInWorld(name, x, y) {
+    playSoundInWorld(name, x, y, object = false) {
         const audioClone = this.playSound(name);
         audioClone.x = x;
         audioClone.y = y;
 
+        if (object) audioClone.object = object;
+
         this.activeSoundsInWorld.push(audioClone);
+        return audioClone;
     }
 
     // get a list of audio files starting with name

@@ -18,6 +18,8 @@ class Zombie extends Entity {
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 
+        this.randomTimeUntilSound = 0;
+
         this.pathFinder = new PathFinder(this, game.world.pathfindingManager);
     }
 
@@ -38,9 +40,11 @@ class Zombie extends Entity {
         const enemiesInRange = this.getEnemiesInMeleAttackRange();
         if (enemiesInRange.length !== 0) this.performMeleAttack();
 
-        if (Math.random() < 0.00025) {
-            game.audioManager.playSoundInWorld('Zombie', this.x, this.y);
-        }
+        if (this.randomTimeUntilSound <= 0) {
+            game.audioManager.playSoundInWorld('Zombie', this.x, this.y, this);
+            const amount = 500 + Math.random() * 2000;
+            this.randomTimeUntilSound += amount;
+        } else this.randomTimeUntilSound--;
 
         this.pathFinder.update();
     }
