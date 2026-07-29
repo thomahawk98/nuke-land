@@ -35,11 +35,11 @@ class AudioManager {
             if (typeof audio.condition !== 'function') continue; // check if the audio is music
 
             if (audio.condition()) { // music should be playing right now
-                audio.play();
+                if (audio.paused) audio.play();
                 audio.volume = Math.min(audio.volume + 0.0025, MAX_VOLUME); // fade in
             } else if (audio.volume > 0) {
                 audio.volume = Math.max(0, audio.volume - 0.0025); // fade out
-            } else {
+            } else if (!audio.paused) {
                 audio.currentTime = 0;
                 audio.pause();
             }

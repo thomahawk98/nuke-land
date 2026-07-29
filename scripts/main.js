@@ -29,9 +29,10 @@ const sources = {
     audios: [
         'Day By Day.mp3', 'Hum.mp3', 'Midnight Ballad.mp3',
         'Hover.mp3', 'Click.mp3',
+        'Eating 0.mp3', 'Eating 1.mp3',
         'Glass Breaking 0.mp3', 'Glass Breaking 1.mp3', 'Glass Breaking 2.mp3',
         'Bullet Impact 0.mp3', 'Bullet Impact 1.mp3', 'Bullet Impact 2.mp3',
-        'Bullet Hit Flesh.mp3',
+        'Bullet Hit Flesh 0.mp3', 'Bullet Hit Flesh 1.mp3',
         'Axe Hit Flesh 0.mp3', 'Axe Hit Flesh 1.mp3',
         'Machete Hit Flesh 0.mp3', 'Machete Hit Flesh 1.mp3',
         'Thud Against Flesh.mp3',

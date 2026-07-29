@@ -9,7 +9,7 @@ class Environment {
         this.objects = [];
         this.objects.push(new Player(user, 0, 0));
 
-        const amount = 1;
+        const amount = 0;
         for (let n = 0; n < amount; n++) {
             const angle = 360 / amount * n;
             const { x, y } = Math.distToMove(40, angle);
@@ -18,7 +18,7 @@ class Environment {
     }
 
     update() {
-        //this.handleEnemySpawning();
+        this.handleEnemySpawning();
         this.updateObjects();
         this.resolveEntityCollisions();
         this.objects = this.objects.filter(a => !a.delete);

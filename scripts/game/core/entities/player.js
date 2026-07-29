@@ -165,10 +165,7 @@ class Player extends Entity {
         this.health = Math.min(this.health + healing, this.maxHealth);
         item.count--;
 
-        if (item.count <= 0) {
-            item.delete = true;
-            return;
-        }
+        game.audioManager.playSound('Eating');
     }
 
     getEnemiesInMeleAttackRange(item) {

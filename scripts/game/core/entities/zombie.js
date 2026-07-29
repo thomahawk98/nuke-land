@@ -18,7 +18,7 @@ class Zombie extends Entity {
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 
-        this.randomTimeUntilSound = 0;
+        this.randomTimeUntilSound = 500 + Math.round(Math.random() * 2000);
 
         this.pathFinder = new PathFinder(this, game.world.pathfindingManager);
     }
@@ -42,7 +42,7 @@ class Zombie extends Entity {
 
         if (this.randomTimeUntilSound <= 0) {
             game.audioManager.playSoundInWorld('Zombie', this.x, this.y, this);
-            const amount = 500 + Math.random() * 2000;
+            const amount = 500 + Math.round(Math.random() * 2000);
             this.randomTimeUntilSound += amount;
         } else this.randomTimeUntilSound--;
 
@@ -104,17 +104,24 @@ class Zombie extends Entity {
         this.accelTarget = move;
     }
 
+    takeDamage(amount) {
+        if (this.invincibility > 0) return; // can't be damaged
+        this.health -= amount;
+        this.invincibility = 50; // 0.5s of invincibility after taking damage
+        this.randomTimeUntilSound = 0; // make a noise after being hurt
+    }
+
+    isEnemy(o) {
+        return o.type == 'player';
+    }
+
     draw() {
         ctx.save();
-        ctx.rotate(Math.PI);
+        ctx.rotate(Math.PI); // the zombie image is flipped for some reason
         ctx.scale(1.5, 1.5);
 
         ctx.drawImage(images.get('Zombie.png'), -0.5, -0.5, 1, 1);
 
         ctx.restore();
-    }
-
-    isEnemy(o) {
-        return o.type == 'player';
     }
 }
