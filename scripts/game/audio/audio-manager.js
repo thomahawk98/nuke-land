@@ -53,7 +53,10 @@ class AudioManager {
 
             const HEARING_RANGE = 40;
             sound.volume = Math.clamp01(1 - (dist / HEARING_RANGE));
+            if(sound.ended) sound.delete = true;
         }
+
+        this.activeSoundsInWorld = this.activeSoundsInWorld.filter(a => !a.delete);
     }
 
     playSound(name) {
