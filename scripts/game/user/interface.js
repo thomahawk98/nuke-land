@@ -116,8 +116,8 @@ class Interface {
 
     getHint(player) {
         // check player vacinity for doors or chests
-        const hasChest = this.checkPlayerVacinityFor(player, 'chest');
-        if (hasChest && this.inventoryManager.getOpenInventoryCount() == 0) return `press 'E' to open chest`;
+        const chest = player.getNearestChest();
+        if (chest && this.inventoryManager.getOpenInventoryCount() == 0) return `press 'E' to open chest`;
 
         const hasDoor = this.checkPlayerVacinityFor(player, 'door');
         if (hasDoor) return `press 'SPACE' to toggle door`;

@@ -18,18 +18,6 @@ class Player extends Entity {
         this.RENDER_DISTANCE = 4;
     }
 
-    isObjectVisible(o) {
-        const inRenderDistance = this.isObjectInRenderDistance(o);
-        if (!inRenderDistance) return false;
-
-        const angle = Math.dirTo(this.x, this.y, o.x, o.y);
-        const distance = Math.distTo(this.x, this.y, o.x, o.y);
-        const lineOfSightBlocked = raycast(this.x, this.y, angle, distance);
-        if (lineOfSightBlocked) return false;
-
-        return true;
-    }
-
     isObjectInRenderDistance(o) {
         const { x: ox, y: oy } = game.world.chunkManager.getChunkCors(o.x, o.y);
         const { x: px, y: py } = game.world.chunkManager.getChunkCors(this.x, this.y);
@@ -211,6 +199,36 @@ class Player extends Entity {
                 block.light += light;
             }
         }
+    }
+
+    getNearestChest() {
+        const RANGE = 3;
+        const chests = [];
+        for (let x = -RANGE; x <= RANGE; x++) {
+            for (let y = -RANGE; y <= RANGE; y++) {
+                // check if a block exists and if it's a chest
+                const block = game.world.getBlock(this.x + x, this.y + y);
+                if (!block || block.type !== 'chest') continue;
+                chests.push({ chest: block, x: this.x + x, y: this.y + y });
+            }
+        }
+
+        let nearest = { chest: null }
+        let nearestDist = Infinity;
+        for (const chest of chests) {
+            const dist = Math.distTo(this.x, this.y, chest.x, chest.y);
+            if (dist > RANGE) continue;
+            if (dist >= nearestDist) continue;
+
+            const dir = Math.dirTo(this.x, this.y, chest.x, chest.y);
+            const lineOfSightBlocked = raycast(this.x, this.y, dir, dist);
+            if (lineOfSightBlocked && lineOfSightBlocked !== chest.chest) continue;
+
+            nearest = chest;
+            nearestDist = dist;
+        }
+
+        return nearest.chest;
     }
 
     draw() {
