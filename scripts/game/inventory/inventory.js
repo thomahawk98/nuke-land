@@ -37,6 +37,12 @@ class Inventory {
         const ease = Math.easeInOut(this.animation);
         this.x = this.openCors.x * ease + this.closedCors.x * (1 - ease);
         this.y = this.openCors.y * ease + this.closedCors.y * (1 - ease);
+
+        for (let n = 0; n < this.items.length; n++) {
+            const item = this.items[n];
+            if (!item) continue;
+            if (item.count <= 0) this.items[n] = false;
+        }
     }
 
     updateItems() {
@@ -45,7 +51,7 @@ class Inventory {
             if (!item) continue;
             item.update();
 
-            if(item.delete || item.count <= 0) this.items[n] = false;
+            if (item.delete || item.count <= 0) this.items[n] = false;
         }
     }
 

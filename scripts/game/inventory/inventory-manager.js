@@ -62,9 +62,145 @@ class InventoryManager {
             }
         }
 
+        this.updateMouseLeft();
+    }
+
+    updateMouseLeft() {
         if (user.mouse.left.click) {
-            this.swapMouseItems();
+            if (user.keys.down['Shift']) {
+                const itemUnderMouse = this.getItemUnderMouse();
+                if (itemUnderMouse == null) return;
+
+                const mouseIndexes = this.getMouseInventoryAndSlotIndexes();
+                this.moveItemToBestIndex(itemUnderMouse, mouseIndexes[0], mouseIndexes[1]);
+            } else {
+                this.swapMouseItems();
+            }
         }
+    }
+
+    moveItemToBestIndex(item, currentInventoryIndex, currentIndex) {
+        const inventory = this.displayedInventories[currentInventoryIndex];
+        if (!inventory || !item) return false;
+
+        // Keep merging while there are compatible stacks.
+        while (item.count > 0) {
+            const bestIndex = this.getBestIndexForItem(
+                item,
+                inventory,
+                currentIndex
+            );
+
+            if (bestIndex === undefined) {
+                // No more places to put the item.
+                return false;
+            }
+
+            const destination = inventory.items[bestIndex];
+
+            if (destination) {
+                // Merge into an existing stack.
+                const fullyMerged = this.mergeItems(destination, item);
+
+                if (fullyMerged) {
+                    // Entire item was transferred.
+                    inventory.items[currentIndex] = false;
+                    return true;
+                }
+
+                // Partial merge.
+                // DO NOT change currentIndex.
+                // The original item is still located at currentIndex.
+                continue;
+            }
+
+            // Move the remaining item into an empty slot.
+            inventory.items[currentIndex] = false;
+            inventory.items[bestIndex] = item;
+
+            return true;
+        }
+
+        return false;
+    }
+
+
+    getBestIndexForItem(item, inventory, currentIndex = undefined) {
+        if (!inventory || !item) return undefined;
+
+        const itemRow =
+            currentIndex === undefined
+                ? undefined
+                : this.getRow(currentIndex, inventory);
+
+        let firstMergeable = undefined;
+        let firstEmpty = undefined;
+        let firstEmptySameRow = undefined;
+
+        for (let n = 0; n < inventory.items.length; n++) {
+            const other = inventory.items[n];
+
+            // Never select the slot the item currently occupies.
+            if (n === currentIndex) continue;
+
+            if (other) {
+                if (
+                    firstMergeable === undefined &&
+                    this.itemsMergeable(other, item)
+                ) {
+                    // Prefer mergeable slots outside the current row.
+                    if (
+                        itemRow === undefined ||
+                        this.getRow(n, inventory) !== itemRow
+                    ) {
+                        return n;
+                    }
+
+                    firstMergeable = n;
+                }
+
+                continue;
+            }
+
+            // Empty slot.
+            if (firstEmpty === undefined) {
+                firstEmpty = n;
+            }
+
+            // Remember an empty slot in the same row as a fallback.
+            if (
+                firstEmptySameRow === undefined &&
+                itemRow !== undefined &&
+                this.getRow(n, inventory) === itemRow
+            ) {
+                firstEmptySameRow = n;
+            }
+
+            // Prefer empty slots outside the current row.
+            if (
+                itemRow === undefined ||
+                this.getRow(n, inventory) !== itemRow
+            ) {
+                return n;
+            }
+        }
+
+        // Fall back to a mergeable slot in the same row.
+        if (firstMergeable !== undefined) {
+            return firstMergeable;
+        }
+
+        // Then an empty slot in the same row.
+        if (firstEmptySameRow !== undefined) {
+            return firstEmptySameRow;
+        }
+
+        // Finally, any empty slot.
+        return firstEmpty;
+    }
+
+    getRow(index, inventory) {
+        return Math.floor(index / inventory.width);
     }
 
     swapMouseItems() {
@@ -167,35 +303,6 @@ class InventoryManager {
             this.displayedInventories.push(inventory);
     }
 
-    getBestIndexForItemInInventory(inventory, item) {
-        // this code is all dumb and old because of the new slot system
-        /*
-        // compile a list of available slots
-        const takenSlots = inventory.items.filter(o => !inventory.itemsMergeable(o, item)).map(a => a = a.slot); // indexes occupied by other unmergeable items
-        let availableSlots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19].filter(a => !takenSlots.includes(a));
-
-        //remove the slots in the same row as the item if empty slots in other rows exist
-        if (item.slot !== "just picked up") {
-            const filteredSlots = availableSlots.filter(a => Math.floor(a / inventory.width) !== Math.floor(item.slot / inventory.width));
-            if (filteredSlots.length > 0) availableSlots = filteredSlots;
-        }
-
-        if (availableSlots.length <= 0) return false; // can't move item anywhere
-
-        // compile a lidt of available merges
-        availableSlots = availableSlots.sort((a, b) => a - b);
-        const availableMerges = [];
-        for (var slot of availableSlots) {
-            var itemInSlot = inventory.items.find(a => a.slot == slot);
-            if (itemInSlot) availableMerges.push(slot);
-        }
-
-        // choose combining with another item over jumping to a new slot
-        const slots = availableMerges.length > 0 ? availableMerges : availableSlots;
-        return slots[0]; // this is the best slot in this inventory for this item
-        */
-    };
-
     tryCombining(o1, o2) {
         if (this.itemsMergeable(o1, o2)) {
             this.mergeItems(o1, o2);
@@ -216,18 +323,14 @@ class InventoryManager {
         );
     };
 
-    mergeItems(item1, item2) { // this is the same function as load ammo?!?
+    mergeItems(item1, item2) {
         var maxStackSize = Item.getMaxStackSizeForType(item1.type);
         var amountTransfered = Math.min(maxStackSize - item1.count, item2.count);
-        // don't transfer more than the stack can hold, or more than the item has
 
         item1.count += amountTransfered;
         item2.count -= amountTransfered;
 
-        if (item2.count > 0) return false; // the whole stack was not transferred
-
-        item2.delete = true;
-        return true; // the whole stack was transfered
+        return item2.count <= 0;
     };
 
     canBeLoaded(gun, ammo) {
