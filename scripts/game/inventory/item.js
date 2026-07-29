@@ -92,11 +92,11 @@ class Item {
                 };
             case 'shotgun':
                 return {
-                    bulletDamage: 25,
+                    bulletDamage: 30,
                     bulletKnockback: 0.15,
                     bulletSpeed: 0.35,
                     bulletSpread: 30,
-                    numberOfBullets: 6,
+                    numberOfBullets: 10,
                     maxRangedReload: 100,
                     range: 7,
                     ammo: 8,
