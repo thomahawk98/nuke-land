@@ -30,6 +30,8 @@ class Bullet extends Entity {
         delete this.angleOfAttack;
         delete this.meleReload;
         delete this.maxMeleReload;
+        delete this.w;
+        delete this.h;
     }
 
     update() {
@@ -58,7 +60,12 @@ class Bullet extends Entity {
             if (o == this.from) continue;
             if (o.type == 'bullet') continue;
 
-            const collided = this.x > o.x - 0.5 && this.y > o.y - 0.5 && this.x < o.x + 0.5 && this.y < o.y + 0.5; // SKIBIDI accurate implement hitboxes here
+            const minX = o.x - o.w * 0.5;
+            const maxX = o.x + o.w * 0.5;
+            const minY = o.y - o.h * 0.5;
+            const maxY = o.y + o.h * 0.5;
+
+            const collided = this.x + this.radius > minX && this.y + this.radius > minY && this.x - this.radius < maxX && this.y - this.radius < maxY;
             if (collided) return o;
         }
 

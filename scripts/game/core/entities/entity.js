@@ -9,6 +9,9 @@ class Entity {
         this.accel = 0.01;
         this.accelTarget = { x: 0, y: 0 };
 
+        this.w = 0.75;
+        this.h = 0.75;
+
         this.health = 100;
         this.maxHealth = 100;
 
@@ -85,8 +88,7 @@ class Entity {
     }
 
     checkIfCollidingWithVoxel(x = this.x, y = this.y) {
-        const w = 0.75, h = 0.75;
-        const bounds = [x - w * 0.5, y - h * 0.5, w, h];
+        const bounds = [x - this.w * 0.5, y - this.h * 0.5, this.w, this.h];
         const blocks = game.world.getBlocksInRectangle(...bounds);
         for (const block of blocks) {
             if (block.solid) return true;
