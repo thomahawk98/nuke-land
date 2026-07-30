@@ -7,6 +7,9 @@ class Player extends Entity {
         this.inventory = new Inventory(this, 4, 3);
         this.inventory.items[0] = new Item('machete');
         this.inventory.items[1] = new Item('food', 4);
+        
+        this.w = 0.65;
+        this.h = 0.65;
         /*
          const gun = new Item('pistol');
          gun.ammo = Infinity;
