@@ -44,7 +44,7 @@ function getRandomOptionsFromLootPool(lootPool) {
                 { type: 'axe', maxCount: 1, weight: 1 },
                 { type: 'pistol', maxCount: 1, weight: 1 },
                 { type: 'shotgun', maxCount: 1, weight: 1 },
-                { type: 'flamethrower', maxCount: 1, weight: 100 },
+                { type: 'flamethrower', maxCount: 1, weight: 0.5 },
             ];
         case 'food chest':
             return [

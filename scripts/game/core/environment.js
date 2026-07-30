@@ -3,6 +3,7 @@ class Environment {
         this.objects = [];
         this.AMOUNT_OF_ZOMBIES_DAY = 5;
         this.AMOUNT_OF_ZOMBIES_NIGHT = 300;
+        this.MIN_SPAWN_DIST = 35;
     }
 
     reset() {
@@ -18,7 +19,7 @@ class Environment {
     }
 
     update() {
-        this.handleEnemySpawning();
+        //this.handleEnemySpawning();
         this.updateObjects();
         this.resolveEntityCollisions();
         this.objects = this.objects.filter(a => !a.delete);
@@ -36,7 +37,7 @@ class Environment {
     }
 
     spawnNewEnemy(player) {
-        const dist = 35 + Math.random() * 15;
+        const dist = this.MIN_SPAWN_DIST + Math.random() * 15;
         const dir = Math.random() * 360;
         const cors = Math.distToMove(dist, dir);
         const x = player.x + cors.x, y = player.y + cors.y;
@@ -164,5 +165,27 @@ class Environment {
             ctx.restore();
 
         }
+    }
+
+    checkIfPlayerIsSafe() {
+        const player = game.getPlayer();
+        if (!player) return;
+
+        // create a new path
+        const path = new Path(player, game.world.pathfindingManager);
+
+        // calculate the area of a circle with diameter MIN_SPAWN_DIST
+        // this is the max amount of cells that must be checked before the player is determined safe
+        const dist = this.MIN_SPAWN_DIST;
+        const area = Math.PI * dist * dist
+
+        path.end.x = player.x;
+        path.end.y = player.y - dist;
+
+        const pathIsPossible = path.calculate(500, true);
+        if (pathIsPossible === null) return true; // player is enclosed
+
+        // player is not enclosed
+        return false;
     }
 }

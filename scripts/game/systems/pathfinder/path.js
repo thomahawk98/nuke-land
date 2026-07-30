@@ -27,17 +27,18 @@ class Path {
         return data;
     }
 
-    calculate(maxDepth = 50) {
+    calculate(maxDepth = 50, checkForPossiblePath = false) {
         this.searchData.clear();
 
         this.start.x = this.object.x;
         this.start.y = this.object.y;
 
-        const closestNodeToEnd = this.searchForPath(maxDepth);
-        this.steps = this.decompileStepsFromNodeParents(closestNodeToEnd);
+        const value = this.searchForPath(maxDepth, checkForPossiblePath);
+        if (checkForPossiblePath) return value;
+        else this.steps = this.decompileStepsFromNodeParents(value);
     }
 
-    searchForPath(maxDepth) {
+    searchForPath(maxDepth, checkForPossiblePath = false) {
         this.startNode = this.manager.getNodeAt(this.start.x, this.start.y, true);
         this.endNode = this.manager.getNodeAt(this.end.x, this.end.y, true);
         if (!this.startNode || !this.endNode) return console.error('here');
@@ -51,16 +52,24 @@ class Path {
 
         // make sure to not go over the search depth
         for (let i = 0; i < maxDepth; i++) {
-            if (uncheckedNodes.size == 0) break; //all available nodes have been checked
+            if (uncheckedNodes.size == 0) {  // all available nodes have been checked, therefore the starting point is enclosed
+                console.log('no more nodes to check')
+                if (checkForPossiblePath) return null;
+                else break;
+            }
 
             const current = this.getLowestCostNode(uncheckedNodes);
-            if (current == this.endNode) return current; //path has been found
+            if (current.x == this.endNode.x && current.y == this.endNode.y) {
+                if (checkForPossiblePath) return true;
+                else return current; //path has been found
+            }
 
             this.searchCurrentNode(current, uncheckedNodes, checkedNodes);
         }
 
-        //the end node was not found, could be too far away or obstructed
-        return this.getClosestNodeToEnd(checkedNodes);
+        // the end node was not found, could be too far away or obstructed
+        if (checkForPossiblePath) return false;
+        else return this.getClosestNodeToEnd(checkedNodes);
     }
 
     setStartNodeData() {
@@ -104,6 +113,7 @@ class Path {
     searchCurrentNode(current, uncheckedNodes, checkedNodes) {
         //find all the neighbors
         const traversableNeighbors = this.manager.getTraversableNeighborsOfNode(current);
+        console.log(current, traversableNeighbors.length)
         for (const o of traversableNeighbors) {
             this.checkNeighborNode(o, current, uncheckedNodes, checkedNodes);
         }

@@ -106,7 +106,7 @@ class Item {
                 };
             case 'flamethrower':
                 return {
-                    bulletDamage: 1,
+                    bulletDamage: 3,
                     bulletKnockback: 0,
                     bulletSpeed: 0.25,
                     bulletSpread: 60,
