@@ -2,27 +2,49 @@ class Zombie extends Entity {
     constructor(x, y) {
         super(x, y);
         this.type = 'zombie';
-        this.accel = 0.0065;
 
-        this.health = 200;
-        this.maxHealth = 200;
-
-        this.detectionRange = 20;
         this.targetPosition = { x, y };
 
         this.randomWaitTime = Math.round(Math.random() * 500);
         this.urgency = 0.99;
 
-        this.damage = 40;
         this.range = 1.25;
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 
         this.skin = `Zombie ${Math.floor(Math.random() * 3)}`;
-
         this.randomTimeUntilSound = 500 + Math.round(Math.random() * 2000);
 
         this.pathFinder = new PathFinder(this, game.world.pathfindingManager);
+
+        this.setStatsPerGameMode();
+    }
+
+    setStatsPerGameMode(mode = game.mode) {
+        switch (mode) {
+            case 'easy':
+                this.accel = 0.0035;
+                this.health = 100;
+                this.maxHealth = 100;
+                this.detectionRange = 15;
+                this.damage = 10;
+                return;
+            case 'normal':
+            default:
+                this.accel = 0.0065;
+                this.health = 200;
+                this.maxHealth = 200;
+                this.detectionRange = 20;
+                this.damage = 30;
+                return;
+            case 'impossible':
+                this.accel = 0.009; // almost as fast as the player, watch out!
+                this.health = 250;
+                this.maxHealth = 250;
+                this.detectionRange = 30;
+                this.damage = 40;
+                return;
+        }
     }
 
     update() {

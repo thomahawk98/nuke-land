@@ -40,6 +40,7 @@ function getRandomOptionsFromLootPool(lootPool) {
                 { type: 'ammo', subtype: 'shotgun', maxCount: 8, weight: 3 },
                 { type: 'bat', maxCount: 1, weight: 3 },
                 { type: 'machete', maxCount: 1, weight: 2 },
+                { type: 'spiked bat', maxCount: 1, weight: 1.5 },
                 { type: 'axe', maxCount: 1, weight: 1 },
                 { type: 'pistol', maxCount: 1, weight: 1 },
                 { type: 'shotgun', maxCount: 1, weight: 1 },

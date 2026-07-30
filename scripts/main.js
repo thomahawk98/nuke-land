@@ -21,7 +21,7 @@ const sources = {
     images: [
         'Zombie 0.png', 'Zombie 1.png', 'Zombie 2.png',
         'Player.png',
-        'Axe.png', 'Machete.png', 'Bat.png',
+        'Axe.png', 'Machete.png', 'Bat.png', 'Spiked Bat.png',
         'Shotgun.png', 'Pistol.png',
         'Shotgun Ammo.png', 'Pistol Ammo.png',
         'Food.png'

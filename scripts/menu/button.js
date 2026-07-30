@@ -17,6 +17,7 @@ class Button {
         this.textSize = 70;
 
         this.changeText = function () {}
+        this.drawHovered = function () {}
 
         for (const [key, value] of Object.entries(misc)) {
             this[key] = value;
@@ -46,6 +47,8 @@ class Button {
         if (this.hovered) {
             ctx.scale(1.1, 1.1);
             ctx.rotate(Math.sin(game.t * 0.02) * 2 * Math.PI / 180);
+            
+            this.drawHovered();
         }
 
         const smallestDim = Math.min(this.w, this.h);

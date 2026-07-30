@@ -5,20 +5,39 @@ class Player extends Entity {
         this.type = 'player';
 
         this.inventory = new Inventory(this, 4, 3);
-        this.inventory.items[0] = new Item('machete');
-        this.inventory.items[1] = new Item('food', 4);
-        
+        this.setItemsPerGameMode();
+
         this.w = 0.65;
         this.h = 0.65;
-        /*
-         const gun = new Item('pistol');
-         gun.ammo = Infinity;
-         this.inventory.items[0] = gun;
-         */
-
 
         this.GENERATION_DISTANCE = 5;
         this.RENDER_DISTANCE = 4;
+    }
+
+    setItemsPerGameMode(mode = game.mode) {
+        switch (mode) {
+            case 'easy':
+                this.inventory.items[0] = new Item('machete');
+                this.inventory.items[1] = new Item('axe');
+                this.inventory.items[2] = new Item('pistol');
+                this.inventory.items[3] = new Item('food', 16);
+
+                const ammo1 = new Item('ammo', 16);
+                ammo1.subtype = 'pistol';
+                this.inventory.items[6] = ammo1;
+
+                const ammo2 = new Item('ammo', 16);
+                ammo2.subtype = 'pistol';
+                this.inventory.items[10] = ammo2;
+                return;
+            case 'normal':
+            default:
+                this.inventory.items[0] = new Item('machete');
+                this.inventory.items[1] = new Item('food', 4);
+                return;
+            case 'impossible':
+                return; // no items, sorry :)
+        }
     }
 
     isObjectInRenderDistance(o) {
@@ -283,6 +302,7 @@ class Player extends Entity {
             case 'axe':
             case 'machete':
             case 'bat':
+            case 'spiked bat':
                 return -45;
 
             case 'pistol':

@@ -51,7 +51,7 @@ class Item {
                 return {
                     damage: 35,
                     knockback: 0.25,
-                    range: 4.5,
+                    range: 4,
                     maxMeleReload: 75,
                     angleOfAttack: 45,
                 };
@@ -70,6 +70,14 @@ class Item {
                     range: 3.5,
                     maxMeleReload: 100,
                     angleOfAttack: 90,
+                };
+            case 'spiked bat':
+                return {
+                    damage: 45,
+                    knockback: 0.5,
+                    range: 4,
+                    maxMeleReload: 100,
+                    angleOfAttack: 75,
                 };
             case 'pistol':
                 return {
@@ -110,6 +118,8 @@ class Item {
             ctx.drawImage(images.get('Machete.png'), -25, -25, 50, 50);
         } else if (this.type == 'bat') {
             ctx.drawImage(images.get('Bat.png'), -25, -25, 50, 50);
+        } else if (this.type == 'spiked bat') {
+            ctx.drawImage(images.get('Spiked Bat.png'), -25, -25, 50, 50);
         } else if (this.type == 'shotgun') {
             ctx.drawImage(images.get('Shotgun.png'), -25, -25, 50, 50);
         } else if (this.type == 'pistol') {
