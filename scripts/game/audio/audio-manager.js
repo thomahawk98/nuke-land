@@ -90,7 +90,7 @@ class AudioManager {
     playSoundInWorld(name, x, y, object = false) {
         // don't play the sound if too many of the same sound exist in the world
         const amountOfSounds = this.activeSoundsInWorld.filter(a => a.name == name).length;
-        if (amountOfSounds >= 15) return console.log('too many sounds of', name)
+        if (amountOfSounds >= 10) return console.log('too many sounds of', name)
 
         const audioClone = this.playSound(name);
         audioClone.x = x;

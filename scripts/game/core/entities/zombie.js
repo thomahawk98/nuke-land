@@ -117,7 +117,6 @@ class Zombie extends Entity {
 
     draw() {
         ctx.save();
-        ctx.rotate(Math.PI); // the zombie image is flipped for some reason
         ctx.scale(1.5, 1.5);
 
         ctx.drawImage(images.get('Zombie.png'), -0.5, -0.5, 1, 1);
