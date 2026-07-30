@@ -80,44 +80,63 @@ class InventoryManager {
     }
 
     moveItemToBestIndex(item, currentInventoryIndex, currentIndex) {
-        const inventory = this.displayedInventories[currentInventoryIndex];
-        if (!inventory || !item) return false;
+        if (!item) return false;
 
-        // Keep merging while there are compatible stacks.
-        while (item.count > 0) {
-            const bestIndex = this.getBestIndexForItem(
-                item,
-                inventory,
-                currentIndex
-            );
+        const currentInventory = this.displayedInventories[currentInventoryIndex];
 
-            if (bestIndex === undefined) {
-                // No more places to put the item.
-                return false;
-            }
+        // Search every other inventory first.
+        const inventorySearchList = this.displayedInventories
+            .sort((a, b) => {
+                const aScore = a.container.type === 'player' ? 1 : 0;
+                const bScore = b.container.type === 'player' ? 1 : 0;
+                return aScore - bScore;
+            })
+            .filter(inventory => inventory !== currentInventory);
 
-            const destination = inventory.items[bestIndex];
+        // First try to merge into existing stacks.
+        for (const inventory of inventorySearchList) {
+            const fullyMerged = this.mergeItemInInventory(item, inventory);
 
-            if (destination) {
-                // Merge into an existing stack.
-                const fullyMerged = this.mergeItems(destination, item);
-
-                if (fullyMerged) {
-                    // Entire item was transferred.
-                    inventory.items[currentIndex] = false;
-                    return true;
+            if (fullyMerged) {
+                if (currentInventory) {
+                    currentInventory.items[currentIndex] = false;
                 }
 
-                // Partial merge.
-                // DO NOT change currentIndex.
-                // The original item is still located at currentIndex.
-                continue;
+                return true;
             }
+        }
 
-            // Move the remaining item into an empty slot.
-            inventory.items[currentIndex] = false;
-            inventory.items[bestIndex] = item;
+        // Then try to move the remaining stack into an empty slot.
+        for (const inventory of inventorySearchList) {
+            const movedSuccessfully = this.moveItemIntoInventory(item, inventory);
 
+            if (movedSuccessfully) {
+                if (currentInventory) {
+                    currentInventory.items[currentIndex] = false;
+                }
+
+                return true;
+            }
+        }
+
+        // Finally search the original inventory.
+        if (!currentInventory) return false;
+
+        const fullyMerged = this.mergeItemInInventory(item, currentInventory);
+
+        if (fullyMerged) {
+            currentInventory.items[currentIndex] = false;
+            return true;
+        }
+
+        const movedSuccessfully = this.moveItemIntoInventory(
+            item,
+            currentInventory,
+            currentIndex
+        );
+
+        if (movedSuccessfully) {
+            currentInventory.items[currentIndex] = false;
             return true;
         }
 
@@ -125,83 +144,61 @@ class InventoryManager {
     }
 
 
-    getBestIndexForItem(item, inventory, currentIndex = undefined) {
-        if (!inventory || !item) return undefined;
-
-        const itemRow =
-            currentIndex === undefined
-                ? undefined
-                : this.getRow(currentIndex, inventory);
-
-        let firstMergeable = undefined;
-        let firstEmpty = undefined;
-        let firstEmptySameRow = undefined;
-
+    mergeItemInInventory(item, inventory) {
         for (let n = 0; n < inventory.items.length; n++) {
-            const other = inventory.items[n];
+            const destination = inventory.items[n];
 
-            // Never select the slot the item currently occupies.
-            if (n === currentIndex) continue;
+            if (!destination) continue;
+            if (!this.itemsMergeable(destination, item)) continue;
 
-            if (other) {
-                if (
-                    firstMergeable === undefined &&
-                    this.itemsMergeable(other, item)
-                ) {
-                    // Prefer mergeable slots outside the current row.
-                    if (
-                        itemRow === undefined ||
-                        this.getRow(n, inventory) !== itemRow
-                    ) {
-                        return n;
-                    }
+            const fullyMerged = this.mergeItems(destination, item);
 
-                    firstMergeable = n;
-                }
-
-                continue;
-            }
-
-            // Empty slot.
-            if (firstEmpty === undefined) {
-                firstEmpty = n;
-            }
-
-            // Remember an empty slot in the same row as a fallback.
-            if (
-                firstEmptySameRow === undefined &&
-                itemRow !== undefined &&
-                this.getRow(n, inventory) === itemRow
-            ) {
-
-                firstEmptySameRow = n;
-            }
-
-            // Prefer empty slots outside the current row.
-            if (
-                itemRow === undefined ||
-                this.getRow(n, inventory) !== itemRow
-            ) {
-                return n;
+            if (fullyMerged) {
+                return true;
             }
         }
 
-        // Fall back to a mergeable slot in the same row.
-        if (firstMergeable !== undefined) {
-            return firstMergeable;
-        }
-
-        // Then an empty slot in the same row.
-        if (firstEmptySameRow !== undefined) {
-            return firstEmptySameRow;
-        }
-
-        // Finally, any empty slot.
-        return firstEmpty;
+        return false;
     }
 
-    getRow(index, inventory) {
-        return Math.floor(index / inventory.width);
+
+    moveItemIntoInventory(item, inventory, currentIndex = -1) {
+        const currentRow =
+            currentIndex === -1
+                ? -1
+                : Math.floor(currentIndex / inventory.width);
+
+        // First try slots outside the current row.
+        for (let n = 0; n < inventory.items.length; n++) {
+            const destination = inventory.items[n];
+
+            if (destination) continue;
+
+            const destinationRow = Math.floor(n / inventory.width);
+
+            if (destinationRow === currentRow) continue;
+
+            // Move the actual Item instance.
+            inventory.items[n] = item;
+
+            return true;
+        }
+
+        // If this is a move from an existing inventory,
+        // allow the same row as a fallback.
+        if (currentIndex !== -1) {
+            for (let n = 0; n < inventory.items.length; n++) {
+                const destination = inventory.items[n];
+
+                if (destination) continue;
+
+                inventory.items[n] = item;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     swapMouseItems() {
