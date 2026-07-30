@@ -18,6 +18,8 @@ class Zombie extends Entity {
         this.knockback = 0.2;
         this.maxMeleReload = 100;
 
+        this.skin = `Zombie ${Math.floor(Math.random() * 3)}`;
+
         this.randomTimeUntilSound = 500 + Math.round(Math.random() * 2000);
 
         this.pathFinder = new PathFinder(this, game.world.pathfindingManager);
@@ -119,7 +121,7 @@ class Zombie extends Entity {
         ctx.save();
         ctx.scale(1.5, 1.5);
 
-        ctx.drawImage(images.get('Zombie.png'), -0.5, -0.5, 1, 1);
+        ctx.drawImage(images.get(`${this.skin}.png`), -0.5, -0.5, 1, 1);
 
         ctx.restore();
     }

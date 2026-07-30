@@ -1,7 +1,7 @@
 class Debug {
     constructor() {
         this.enabled = false;
-        this.showPathfindingGrid = true;
+        this.showPathfindingGrid = false;
         this.showEntityHitboxes = true;
         this.showStructureCenters = true;
         this.showChunkBorders = true;

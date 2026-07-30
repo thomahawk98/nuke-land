@@ -19,7 +19,7 @@ setup.initialize(title, dimensions, canvas, ctx);
 // load assets
 const sources = {
     images: [
-        'Zombie.png',
+        'Zombie 0.png', 'Zombie 1.png', 'Zombie 2.png',
         'Player.png',
         'Axe.png', 'Machete.png', 'Bat.png',
         'Shotgun.png', 'Pistol.png',

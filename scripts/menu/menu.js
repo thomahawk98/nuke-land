@@ -3,13 +3,13 @@ class Menu {
         this.buttons = [];
         this.imgSrcs = [
             { src: 'Player.png', x: 150, y: 400, angle: 45 },
-            { src: 'Zombie.png', x: 800, y: 100, angle: 45 },
+            { src: 'Zombie 0.png', x: 800, y: 100, angle: 225 },
             { src: 'Axe.png', x: 500, y: 375, angle: 0 },
             { src: 'Shotgun.png', x: 600, y: 650, angle: 20 },
             { src: 'Shotgun Ammo.png', x: 900, y: 400, angle: 20 },
             { src: 'Pistol Ammo.png', x: 100, y: 850, angle: -20 },
             { src: 'Machete.png', x: 300, y: 100, angle: -90 },
-            { src: 'Zombie.png', x: 850, y: 800, angle: 135 },
+            { src: 'Zombie 1.png', x: 850, y: 800, angle: 315 },
             { src: 'Food.png', x: 225, y: 625, angle: -20 },
         ]
         this.loadButtons();
