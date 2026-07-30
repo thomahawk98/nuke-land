@@ -204,7 +204,7 @@ class Player extends Entity {
     getNearestChest() {
         const RANGE = 3;
         const chests = this.getNearbyChests(RANGE);
-        
+
         let nearest = { chest: null }
         let nearestDist = Infinity;
         for (const chest of chests) {

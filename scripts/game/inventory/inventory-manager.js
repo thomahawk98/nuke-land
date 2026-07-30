@@ -246,11 +246,14 @@ class InventoryManager {
         } else {
             this.openInventory(player.inventory);
 
+            // open the closest chest
             const chest = player.getNearestChest();
             if (chest) {
                 if (!chest.inventory) console.log(`chest: ${chest} does not have an inventory`);
                 this.openInventory(chest.inventory);
             }
+            
+            // open all nearby chests
             /*
         const chests = player.getNearbyChests();
         for (const chest of chests) {
