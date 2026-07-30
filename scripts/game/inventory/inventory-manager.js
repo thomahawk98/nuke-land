@@ -87,8 +87,8 @@ class InventoryManager {
         // Search every other inventory first.
         const inventorySearchList = this.displayedInventories
             .sort((a, b) => {
-                const aScore = a.container.type === 'player' ? 1 : 0;
-                const bScore = b.container.type === 'player' ? 1 : 0;
+                const aScore = a.container.type === 'player' ? 0 : 1;
+                const bScore = b.container.type === 'player' ? 0 : 1;
                 return aScore - bScore;
             })
             .filter(inventory => inventory !== currentInventory);
@@ -123,18 +123,12 @@ class InventoryManager {
         if (!currentInventory) return false;
 
         const fullyMerged = this.mergeItemInInventory(item, currentInventory);
-
         if (fullyMerged) {
             currentInventory.items[currentIndex] = false;
             return true;
         }
 
-        const movedSuccessfully = this.moveItemIntoInventory(
-            item,
-            currentInventory,
-            currentIndex
-        );
-
+        const movedSuccessfully = this.moveItemIntoInventory(item, currentInventory, currentIndex);
         if (movedSuccessfully) {
             currentInventory.items[currentIndex] = false;
             return true;
@@ -252,12 +246,17 @@ class InventoryManager {
         } else {
             this.openInventory(player.inventory);
 
-            // open all chests in player's vacinity
             const chest = player.getNearestChest();
             if (chest) {
                 if (!chest.inventory) console.log(`chest: ${chest} does not have an inventory`);
                 this.openInventory(chest.inventory);
             }
+            /*
+        const chests = player.getNearbyChests();
+        for (const chest of chests) {
+            this.openInventory(chest.chest.inventory);
+        }
+            */
         }
     }
 
