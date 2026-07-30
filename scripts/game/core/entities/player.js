@@ -116,7 +116,7 @@ class Player extends Entity {
             this.attackWithItem();
         }
 
-        if (this.user.mouse.right.click) {
+        if (this.user.mouse.right.down) {
             this.useItem();
         }
     }
@@ -130,7 +130,7 @@ class Player extends Entity {
         if (this.reload > 0) return;
         const item = this.inventory.getSelectedItem();
         if (!item) return;
-        if (item.type == 'pistol' || item.type == 'shotgun') this.shootGun(item);
+        if (item.type == 'pistol' || item.type == 'shotgun' || item.type == 'flamethrower') this.shootGun(item);
         if (item.type == 'food') this.eat(item);
     }
 
@@ -155,6 +155,7 @@ class Player extends Entity {
             }
 
             const bullet = new Bullet(this, data);
+            if(item.type == 'flamethrower') bullet.friction = 0.02;
             game.world.env.objects.push(bullet);
         }
 
@@ -307,6 +308,7 @@ class Player extends Entity {
 
             case 'pistol':
             case 'shotgun':
+            case 'flamethrower':
                 return -45;
 
             default:

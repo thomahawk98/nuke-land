@@ -98,7 +98,7 @@ class Inventory {
 
         item.draw();
         if (item.count !== 1) item.drawCount();
-        if (item.type == 'shotgun' || item.type == 'pistol') item.drawAmmoCount();
+        if (item.type == 'shotgun' || item.type == 'pistol' || item.type == 'flamethrower') item.drawAmmoCount();
 
         ctx.restore();
     }

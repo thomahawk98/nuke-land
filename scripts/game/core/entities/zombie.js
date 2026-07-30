@@ -38,7 +38,7 @@ class Zombie extends Entity {
                 this.damage = 30;
                 return;
             case 'impossible':
-                this.accel = 0.009; // almost as fast as the player, watch out!
+                this.accel = 0.0085; // almost as fast as the player, watch out!
                 this.health = 250;
                 this.maxHealth = 250;
                 this.detectionRange = 30;

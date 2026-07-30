@@ -36,6 +36,7 @@ class Item {
             case 'bat':
             case 'pistol':
             case 'shotgun':
+            case 'flamethrower':
                 return 1;
             default: return 16;
         }
@@ -103,6 +104,18 @@ class Item {
                     ammo: 8,
                     maxAmmo: 8
                 };
+            case 'flamethrower':
+                return {
+                    bulletDamage: 1,
+                    bulletKnockback: 0,
+                    bulletSpeed: 0.25,
+                    bulletSpread: 60,
+                    numberOfBullets: 1,
+                    maxRangedReload: 0,
+                    range: 7,
+                    ammo: 1000,
+                    maxAmmo: 1000
+                };
             default: return {}
         }
     }
@@ -124,6 +137,8 @@ class Item {
             ctx.drawImage(images.get('Shotgun.png'), -25, -25, 50, 50);
         } else if (this.type == 'pistol') {
             ctx.drawImage(images.get('Pistol.png'), -25, -25, 50, 50);
+        } else if (this.type == 'flamethrower') {
+            ctx.drawImage(images.get('Flamethrower.png'), -25, -25, 50, 50);
         } else if (this.type == 'food') {
             ctx.drawImage(images.get('Food.png'), -25, -25, 50, 50);
         } else if (this.type == 'ammo') {

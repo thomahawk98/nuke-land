@@ -22,7 +22,7 @@ const sources = {
         'Zombie 0.png', 'Zombie 1.png', 'Zombie 2.png',
         'Player.png',
         'Axe.png', 'Machete.png', 'Bat.png', 'Spiked Bat.png',
-        'Shotgun.png', 'Pistol.png',
+        'Shotgun.png', 'Pistol.png', 'Flamethrower.png',
         'Shotgun Ammo.png', 'Pistol Ammo.png',
         'Food.png'
     ],
